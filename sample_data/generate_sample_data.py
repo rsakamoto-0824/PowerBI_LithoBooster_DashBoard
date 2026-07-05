@@ -94,8 +94,7 @@ LOT_ID_FORMAT = "5{letter}W975B{number:02d}.{suffix}"
 LOT_LETTER_CHOICES = "AB"
 LOT_SUFFIX_CHOICES = "123456789ABCDEF"  # 末尾は "0"+英数1文字（例: .01, .0F）
 
-# Shotスキャン方向のコード値（0 / 1 / 2 の3値）
-DIRECTION_EVERY_8TH_SHOT = 8    # Shot番号が8の倍数の偶数Shotをコード2にする
+# Shotスキャン方向のコード値（1 / 2 の2値。スキャンの往復に対応する想定）
 
 # ばらつきの大きさ（ダミーデータの見た目を決めるだけの値）
 SHIFT_SIGMA_NM = 15.0           # シフト・オフセット成分
@@ -205,15 +204,8 @@ def wafer_id_of(lot_id, wafer_no):
 
 
 def shot_direction(shot_no):
-    """スキャン方向コード（0 / 1 / 2）を作る。
-
-    奇数Shotは1、偶数Shotは原則0、8の倍数のShotだけ2にする。
-    """
-    if shot_no % 2 == 1:
-        return 1
-    if shot_no % DIRECTION_EVERY_8TH_SHOT == 0:
-        return 2
-    return 0
+    """スキャン方向コード（1 / 2）を作る。奇数Shotは1、偶数Shotは2。"""
+    return 1 if shot_no % 2 == 1 else 2
 
 
 def measurement_status_pair():

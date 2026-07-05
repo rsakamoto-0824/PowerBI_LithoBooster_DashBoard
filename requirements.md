@@ -98,7 +98,8 @@ Nikonが補正前Shot配列）。
 
 #### P1: サマリー / トレンド（Canon）
 
-- AGA線形成分（`AGA_LINEAR_MX/MY/TX/TY/SX/SY`）のLot・Wafer時系列トレンド
+- Wafer低次補正成分6つ（`AGA_LINEAR_SX/SY/MX/MY/TX/TY`）の時系列トレンド小マルチ
+- 計測値X/Yの時系列トレンド（Wafer平均）
 - PSO統計値（`PSO_LINEAR_*`、3σ含む）の時系列トレンド
 - 号機別・製品別の比較（折れ線 + 凡例、または小型マルチ）
 - 管理基準値（しきい値）ラインの表示（基準値は要確認 → I-005）
@@ -123,8 +124,7 @@ Nikonが補正前Shot配列）。
 
 #### P4: サマリー / トレンド（Nikon）
 
-- Wafer線形成分（`WAFER_OFSETX/Y`, `WAFER_SCALX/Y`, `WAFER_ROTX/Y`）の時系列トレンド
-- Shot線形成分（`SHOT_OFSETX/Y`, `SHOT_SCALX/Y`, `SHOT_ROTX/Y`）の時系列トレンド
+- Wafer低次補正成分6つ（`WAFER_OFSETX/Y`, `WAFER_SCALX/Y`, `WAFER_ROTX/Y`）の時系列トレンド小マルチ
 - 号機別・製品別の比較
 - KPIカードは補正成分ごとに**X成分・Y成分を別カード**で表示する
   （OFSETX / OFSETY / SCALX / SCALY / ROTX / ROTY）
@@ -148,8 +148,8 @@ Nikonが補正前Shot配列）。
 
 - **Canonビューの計測値X/Yに対する分析**とする
 - 全ShotをShot座標系（Shot中心原点）に重ねて、Shot内の系統的な傾向を表示
-- Mark位置ごとの平均ベクトル・共分散楕円は**Scan方向ごとの小マルチ**で表示（→ 4.5 観点E）
-- Scan方向（`SHOTINFO_DIRECTION`）ごとの計測値X/Y分布の比較
+- Scan方向は1 / 2の2値。平均ベクトル・共分散楕円・計測値X/Y分布は
+  **「全体（方向区別なし）/ Scan方向1 / Scan方向2」の3パネル**で比較する
 
 #### 補足ページ
 
@@ -202,11 +202,12 @@ Nikonが補正前Shot配列）。
 
 | ID | 可視化内容 | ビュー | 主な使用列 | ビジュアル案 | ページ案 |
 |---|---|---|---|---|---|
-| V-06 | 線形成分の時系列トレンド（号機別色分け + 管理限界線） | 両方 | MEASUREMENT_TIME + 線形成分 | 折れ線 | P1 / P4 |
+| V-06 | Wafer低次補正成分6つ（Canon: AGA_LINEAR SX/SY/MX/MY/TX/TY、Nikon: WAFER_OFSET/SCAL/ROTのX/Y）の時系列トレンド小マルチ（号機別色分け + 管理限界線） | 両方 | MEASUREMENT_TIME + 線形成分 | 小マルチ折れ線 | P1 / P4 |
 | V-07 | PSO残差3σのトレンドと、しきい値超過の強調表示 | Canon | PSO_LINEAR_3SX/3SY | 折れ線 + 条件付き書式 | P1 |
 | V-08 | 移動平均と直近値の乖離による変化点の強調（DAXメジャーで実装） | 両方 | MEASUREMENT_TIME + 各成分 | 折れ線 + マーカー | P1 / P4 |
 | V-09 | 装置×日付マトリックスのヒートマップ（成分平均・NG率）。異常号機を一目で発見 | 両方 | EQPID × 日付 + 各成分 | マトリックス + 条件付き書式 | P1 / P4 |
 | V-10 | KPIカード。数値は**平均値±3σ**の形式で表示（例: 0.05 ± 1.52 ppm）。Nikonは補正成分ごとにX/Y別カード | 両方 | 各メジャー | カード | P1 / P4 |
+| V-30 | 計測値X/Yの時系列トレンド（Wafer平均） | Canon | MEASUREMENT_TIME + RAW_DATA_X/Y | 折れ線 | P1 |
 
 #### 観点C: 面内傾向（Waferマップ）
 
@@ -235,11 +236,11 @@ Nikonが補正前Shot配列）。
 
 | ID | 可視化内容 | ビュー | 主な使用列 | ビジュアル案 | ページ案 |
 |---|---|---|---|---|---|
-| V-19 | Shotスタックマップ: 全ShotのMarkをShot中心原点の座標系に重ね、Mark位置ごとの平均ベクトルを表示（Shot内の系統成分＝指紋の可視化）。**Scan方向（SHOTINFO_DIRECTION）ごとの小マルチ**で描画 | Canon | MARKINFO_POS + RAW_DATA_X/Y + SHOTINFO_DIRECTION | Deneb | P7 |
+| V-19 | Shotスタックマップ: 全ShotのMarkをShot中心原点の座標系に重ね、Mark位置ごとの平均ベクトルを表示（Shot内の系統成分＝指紋の可視化）。**「全体（方向区別なし）/ Scan方向1 / Scan方向2」の3パネル**で描画 | Canon | MARKINFO_POS + RAW_DATA_X/Y + SHOTINFO_DIRECTION | Deneb | P7 |
 | V-20 | ~~スタック時のばらつき表示（Mark位置ごとの3σ）~~ → V-23の共分散楕円に統合 | Canon | 同上 | - | - |
 | V-21 | Shotスタック時の計測値X/YのMark位置別分布（箱ひげ図） | Canon | MARKINFO_POS + RAW_DATA_X/Y | 箱ひげ図 | P7 |
-| V-23 | Shotスタック共分散楕円マップ: Mark位置ごとに全Shot・全Waferの残差X/Yのばらつきを共分散楕円で表示（サイズ・傾き・色の規則はV-22と共通）。**Scan方向ごとの小マルチ**で描画。V-20の3σ表示はこの楕円表示に置き換える | Canon | MARKINFO_POS + RAW_DATA_X/Y + SHOTINFO_DIRECTION | Deneb | P7 |
-| V-29 | Scan方向（SHOTINFO_DIRECTION）ごとの計測値X/Y箱ひげ図 | Canon | SHOTINFO_DIRECTION + RAW_DATA_X/Y | 箱ひげ図 | P7 |
+| V-23 | Shotスタック共分散楕円マップ: Mark位置ごとに全Shot・全Waferの残差X/Yのばらつきを共分散楕円で表示（サイズ・傾き・色の規則はV-22と共通）。**「全体 / Scan方向1 / Scan方向2」の3パネル**で描画。V-20の3σ表示はこの楕円表示に置き換える | Canon | MARKINFO_POS + RAW_DATA_X/Y + SHOTINFO_DIRECTION | Deneb | P7 |
+| V-29 | 計測値X/Yの箱ひげ図（全体 / Scan方向1 / Scan方向2） | Canon | SHOTINFO_DIRECTION + RAW_DATA_X/Y | 箱ひげ図 | P7 |
 
 #### 共分散楕円の仕様（V-22 / V-23 共通）
 

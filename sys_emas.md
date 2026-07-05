@@ -26,7 +26,7 @@
 | 13 | SHOTINFO_SHOTNO | Largeint | Shot番号 | - |
 | 14 | SHOTINFO_PosX | Largeint | Shot中心X座標（Wafer中心原点の絶対座標） | nm |
 | 15 | SHOTINFO_PosY | Largeint | Shot中心Y座標（Wafer中心原点の絶対座標） | nm |
-| 16 | SHOTINFO_DIRECTION | Largeint | 露光スキャン方向（コード値） | - |
+| 16 | SHOTINFO_DIRECTION | Largeint | 露光スキャン方向（コード値。1または2） | - |
 | 17 | IS_AGA_SAMPLE_SHOTS | Boolean | AGAサンプルShotかどうかのフラグ | - |
 | 18 | MARKINFO_MARKNO | Largeint | Mark番号（通常1Shotあたり4点） | - |
 | 19 | MARKINFO_POSX | Float | MarkのX座標（Shot中心からの相対座標） | mm |
