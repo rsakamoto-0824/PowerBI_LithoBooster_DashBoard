@@ -49,18 +49,18 @@
 | 36 | PSO_LINEAR_SY | Float | PSO線形成分: シフトY | nm |
 | 37 | PSO_LINEAR_3SX | Float | PSO線形成分: 残差3σ（X） | nm |
 | 38 | PSO_LINEAR_3SY | Float | PSO線形成分: 残差3σ（Y） | nm |
-| 39 | SEPA_SHOTFORM_SMAGX | Float | Shot別補正（SEPA）: Shot倍率補正X | ppm |
-| 40 | SEPA_SHOTFORM_SMAGY | Float | Shot別補正（SEPA）: Shot倍率補正Y | ppm |
-| 41 | SEPA_SHOTFORM_SROTX | Float | Shot別補正（SEPA）: Shot回転補正X | µrad |
-| 42 | SEPA_SHOTFORM_SROTY | Float | Shot別補正（SEPA）: Shot回転補正Y | µrad |
-| 43 | SEPA_SHOTDATA_SHIFTX | Float | Shot別補正（SEPA）: Shotシフト補正X | nm |
-| 44 | SEPA_SHOTDATA_SHIFTY | Float | Shot別補正（SEPA）: Shotシフト補正Y | nm |
-| 45 | SAME_SHOTFORM_SMAGX | Float | 全Shot共通補正（SAME）: Shot倍率補正X | ppm |
-| 46 | SAME_SHOTFORM_SMAGY | Float | 全Shot共通補正（SAME）: Shot倍率補正Y | ppm |
-| 47 | SAME_SHOTFORM_SROTX | Float | 全Shot共通補正（SAME）: Shot回転補正X | µrad |
-| 48 | SAME_SHOTFORM_SROTY | Float | 全Shot共通補正（SAME）: Shot回転補正Y | µrad |
-| 49 | SAME_SHOTDATA_SHIFTX | Float | 全Shot共通補正（SAME）: Shotシフト補正X | nm |
-| 50 | SAME_SHOTDATA_SHIFTY | Float | 全Shot共通補正（SAME）: Shotシフト補正Y | nm |
+| 39 | SEPA_SHOTFORM_SMAGX | Float | Shotごとの線形補正（SEPA、Scanner用）: Shot倍率補正X | ppm |
+| 40 | SEPA_SHOTFORM_SMAGY | Float | Shotごとの線形補正（SEPA、Scanner用）: Shot倍率補正Y | ppm |
+| 41 | SEPA_SHOTFORM_SROTX | Float | Shotごとの線形補正（SEPA、Scanner用）: Shot回転補正X | µrad |
+| 42 | SEPA_SHOTFORM_SROTY | Float | Shotごとの線形補正（SEPA、Scanner用）: Shot回転補正Y | µrad |
+| 43 | SEPA_SHOTDATA_SHIFTX | Float | Shotごとの線形補正（SEPA、Scanner用）: Shotシフト補正X | nm |
+| 44 | SEPA_SHOTDATA_SHIFTY | Float | Shotごとの線形補正（SEPA、Scanner用）: Shotシフト補正Y | nm |
+| 45 | SAME_SHOTFORM_SMAGX | Float | Shotごとの線形補正（SAME、Stepper用）: Shot倍率補正X | ppm |
+| 46 | SAME_SHOTFORM_SMAGY | Float | Shotごとの線形補正（SAME、Stepper用）: Shot倍率補正Y | ppm |
+| 47 | SAME_SHOTFORM_SROTX | Float | Shotごとの線形補正（SAME、Stepper用）: Shot回転補正X | µrad |
+| 48 | SAME_SHOTFORM_SROTY | Float | Shotごとの線形補正（SAME、Stepper用）: Shot回転補正Y | µrad |
+| 49 | SAME_SHOTDATA_SHIFTX | Float | Shotごとの線形補正（SAME、Stepper用）: Shotシフト補正X | nm |
+| 50 | SAME_SHOTDATA_SHIFTY | Float | Shotごとの線形補正（SAME、Stepper用）: Shotシフト補正Y | nm |
 | 51 | RAW_DATA_X | Float | アライメント計測結果X（Mark単位） | nm |
 | 52 | RAW_DATA_Y | Float | アライメント計測結果Y（Mark単位） | nm |
 | 53 | RAW_DATA_STSX | Float | アライメント計測結果X（Mark単位）の判定 | - |
@@ -138,6 +138,6 @@
 - **AGA**: アライメント計測（Advanced Global Alignment）。
   Waferの位置ずれを複数のサンプルShotで計測し、線形成分（シフト・倍率・回転）を算出する処理
 - **PSO**: Wafer線形補正成分
-- **SEPA / SAME**: Shot補正の方式。SEPA = Scanner用補正、SAME = Stepper用補正
+- **SEPA / SAME**: Shotごとの線形補正値。SEPA = Scanner用補正、SAME = Stepper用補正
 - **CORRDATA**: Wafer面内の補正点ごとの補正量（Nikon）
 - **SHOTFAC**: Shot内の高次補正の多項式係数（Nikon）
