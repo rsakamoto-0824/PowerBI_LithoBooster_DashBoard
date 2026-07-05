@@ -1,0 +1,269 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p6LinFac",
+  "position": {
+    "x": 902,
+    "y": 96,
+    "z": 11,
+    "width": 341,
+    "height": 250
+  },
+  "visual": {
+    "visualType": "clusteredColumnChart",
+    "query": {
+      "queryState": {
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOT OFSETX 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOT OFSETX 平均",
+              "nativeQueryRef": "SHOT OFSETX 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOT OFSETY 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOT OFSETY 平均",
+              "nativeQueryRef": "SHOT OFSETY 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOT SCALX 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOT SCALX 平均",
+              "nativeQueryRef": "SHOT SCALX 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOT SCALY 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOT SCALY 平均",
+              "nativeQueryRef": "SHOT SCALY 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOT ROTX 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOT ROTX 平均",
+              "nativeQueryRef": "SHOT ROTX 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOT ROTY 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOT ROTY 平均",
+              "nativeQueryRef": "SHOT ROTY 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC02X 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC02X 平均",
+              "nativeQueryRef": "SHOTFAC02X 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC03X 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC03X 平均",
+              "nativeQueryRef": "SHOTFAC03X 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC04X 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC04X 平均",
+              "nativeQueryRef": "SHOTFAC04X 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC05X 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC05X 平均",
+              "nativeQueryRef": "SHOTFAC05X 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC06X 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC06X 平均",
+              "nativeQueryRef": "SHOTFAC06X 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC02Y 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC02Y 平均",
+              "nativeQueryRef": "SHOTFAC02Y 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC03Y 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC03Y 平均",
+              "nativeQueryRef": "SHOTFAC03Y 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC04Y 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC04Y 平均",
+              "nativeQueryRef": "SHOTFAC04Y 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC05Y 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC05Y 平均",
+              "nativeQueryRef": "SHOTFAC05Y 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "SHOTFAC06Y 平均"
+                }
+              },
+              "queryRef": "NIKON.SHOTFAC06Y 平均",
+              "nativeQueryRef": "SHOTFAC06Y 平均"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'V-28｜Shot補正成分（線形+高次SHOTFAC統合）'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

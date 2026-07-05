@@ -69,6 +69,65 @@ table CANON
 				DIVIDE ( ZeroPoints, AllPoints )
 		formatString: 0.0%
 
+	/// Wafer低次補正成分トレンド用（V-06）。単位は想定: シフトnm
+	measure 'AGA SX 平均' = AVERAGE ( 'CANON'[AGA_LINEAR_SX] )
+		formatString: 0.00
+
+	measure 'AGA SY 平均' = AVERAGE ( 'CANON'[AGA_LINEAR_SY] )
+		formatString: 0.00
+
+	/// 単位は想定: 倍率ppm
+	measure 'AGA MX 平均' = AVERAGE ( 'CANON'[AGA_LINEAR_MX] )
+		formatString: 0.00
+
+	measure 'AGA MY 平均' = AVERAGE ( 'CANON'[AGA_LINEAR_MY] )
+		formatString: 0.00
+
+	/// 単位は想定: 回転µrad
+	measure 'AGA TX 平均' = AVERAGE ( 'CANON'[AGA_LINEAR_TX] )
+		formatString: 0.00
+
+	measure 'AGA TY 平均' = AVERAGE ( 'CANON'[AGA_LINEAR_TY] )
+		formatString: 0.00
+
+	/// Shotごとの線形補正値プロット用（V-03、SEPA=Scanner用）
+	measure 'SEPA SMAGX 平均' = AVERAGE ( 'CANON'[SEPA_SHOTFORM_SMAGX] )
+		formatString: 0.00
+
+	measure 'SEPA SMAGY 平均' = AVERAGE ( 'CANON'[SEPA_SHOTFORM_SMAGY] )
+		formatString: 0.00
+
+	measure 'SEPA SROTX 平均' = AVERAGE ( 'CANON'[SEPA_SHOTFORM_SROTX] )
+		formatString: 0.00
+
+	measure 'SEPA SROTY 平均' = AVERAGE ( 'CANON'[SEPA_SHOTFORM_SROTY] )
+		formatString: 0.00
+
+	measure 'SEPA SHIFTX 平均' = AVERAGE ( 'CANON'[SEPA_SHOTDATA_SHIFTX] )
+		formatString: 0.00
+
+	measure 'SEPA SHIFTY 平均' = AVERAGE ( 'CANON'[SEPA_SHOTDATA_SHIFTY] )
+		formatString: 0.00
+
+	/// Shotごとの線形補正値プロット用（V-03、SAME=Stepper用）
+	measure 'SAME SMAGX 平均' = AVERAGE ( 'CANON'[SAME_SHOTFORM_SMAGX] )
+		formatString: 0.00
+
+	measure 'SAME SMAGY 平均' = AVERAGE ( 'CANON'[SAME_SHOTFORM_SMAGY] )
+		formatString: 0.00
+
+	measure 'SAME SROTX 平均' = AVERAGE ( 'CANON'[SAME_SHOTFORM_SROTX] )
+		formatString: 0.00
+
+	measure 'SAME SROTY 平均' = AVERAGE ( 'CANON'[SAME_SHOTFORM_SROTY] )
+		formatString: 0.00
+
+	measure 'SAME SHIFTX 平均' = AVERAGE ( 'CANON'[SAME_SHOTDATA_SHIFTX] )
+		formatString: 0.00
+
+	measure 'SAME SHIFTY 平均' = AVERAGE ( 'CANON'[SAME_SHOTDATA_SHIFTY] )
+		formatString: 0.00
+
 	column TEC_KIND
 		dataType: string
 		summarizeBy: none
