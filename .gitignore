@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Office一時ファイル（開いている間のロックファイル）
+~$*
+
+# Power BI（実データキャッシュ・ローカル設定はコミット禁止）
+**/.pbi/cache.abf
+**/.pbi/localSettings.json
+
+# .pbixは配布用成果物のためリポジトリに含めない
+*.pbix
+
+# Python
+__pycache__/
+*.pyc
