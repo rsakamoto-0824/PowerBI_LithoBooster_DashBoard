@@ -1,0 +1,61 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-26 / V-18 補正前Shot配列マップ（雛形）。Denebに渡すフィールド: shotX_mm, shotY_mm（Shot中心）, magX_ppm, magY_ppm, rotX_urad, rotY_urad, shiftX_nm, shiftY_nm（CanonはSEPA+SAMEの合計、NikonはCORRDATAの各成分）。Shotごとの補正値から補正前の四隅を逆算し、公称格子（灰）に重ねて誇張表示する。逆算式の符号規約は I-009 で確認後に確定させること",
+  "usermeta": {
+    "deneb": { "build": "skeleton", "metaVersion": 1 },
+    "note": "corner配列（4隅+始点）をflattenし、隅ごとの変位 dx = shiftX + magX*rx - rotX*ry, dy = shiftY + magY*ry + rotY*rx（nm）を誇張倍率で加算して閉じた折れ線を描く"
+  },
+  "params": [
+    {
+      "name": "exaggerate",
+      "value": 300000,
+      "bind": { "input": "range", "min": 10000, "max": 1000000, "step": 10000, "name": "誇張倍率: " }
+    },
+    { "name": "pitchX", "value": 24 },
+    { "name": "pitchY", "value": 28 }
+  ],
+  "data": { "name": "dataset" },
+  "transform": [
+    { "calculate": "[[-1,-1],[1,-1],[1,1],[-1,1],[-1,-1]]", "as": "corners" },
+    { "flatten": [ "corners" ] },
+    { "calculate": "datum.corners[0] * pitchX / 2", "as": "rx" },
+    { "calculate": "datum.corners[1] * pitchY / 2", "as": "ry" },
+    { "calculate": "datum.shiftX_nm + datum.magX_ppm * datum.rx - datum.rotX_urad * datum.ry", "as": "dxNm" },
+    { "calculate": "datum.shiftY_nm + datum.magY_ppm * datum.ry + datum.rotY_urad * datum.rx", "as": "dyNm" },
+    { "calculate": "datum.shotX_mm + datum.rx + datum.dxNm * 0.000001 * exaggerate", "as": "px" },
+    { "calculate": "datum.shotY_mm + datum.ry + datum.dyNm * 0.000001 * exaggerate", "as": "py" },
+    { "calculate": "datum.shotX_mm + datum.rx", "as": "nx" },
+    { "calculate": "datum.shotY_mm + datum.ry", "as": "ny" }
+  ],
+  "layer": [
+    {
+      "description": "公称格子（灰）",
+      "mark": { "type": "line", "stroke": "#C8C8C8", "strokeWidth": 0.6 },
+      "encoding": {
+        "x": { "field": "nx", "type": "quantitative", "scale": { "domain": [ -165, 165 ] }, "axis": null },
+        "y": { "field": "ny", "type": "quantitative", "scale": { "domain": [ -165, 165 ] }, "axis": null },
+        "detail": { "field": "shotX_mm" },
+        "order": { "field": "corners" }
+      }
+    },
+    {
+      "description": "補正前Shot配列（逆算・誇張表示）",
+      "mark": { "type": "line", "stroke": "#F96167", "strokeWidth": 1 },
+      "encoding": {
+        "x": { "field": "px", "type": "quantitative" },
+        "y": { "field": "py", "type": "quantitative" },
+        "detail": { "field": "shotX_mm" },
+        "order": { "field": "corners" },
+        "tooltip": [
+          { "field": "shotX_mm", "title": "Shot X (mm)" },
+          { "field": "shotY_mm", "title": "Shot Y (mm)" },
+          { "field": "shiftX_nm", "title": "シフトX (nm)" },
+          { "field": "shiftY_nm", "title": "シフトY (nm)" }
+        ]
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container",
+  "config": { "view": { "stroke": null } }
+}

@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "LithoBooster"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "beb70043-128f-4945-9b89-b155d42b62a7"
+  }
+}

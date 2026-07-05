@@ -1,0 +1,80 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-11 計測値ベクトルマップ（雛形）。Denebに渡すフィールド: posX_mm（Shot座標+Mark座標のX, mm）, posY_mm（同Y, mm）, rawX_nm（RAW_DATA_X）, rawY_nm（RAW_DATA_Y）, shotX_mm, shotY_mm。Shot枠は shotX/Y と pitchX/pitchY パラメータから描画する。V-12（俯瞰）はこのspecに facet（EQPID×OPERATION）を追加して流用する",
+  "usermeta": {
+    "deneb": { "build": "skeleton", "metaVersion": 1 },
+    "interactivity": { "tooltip": true, "contextMenu": true, "selection": false },
+    "note": "矢印倍率 arrowScale はスライダーで調整可能。色はベクトル長（nm）"
+  },
+  "params": [
+    {
+      "name": "arrowScale",
+      "value": 0.3,
+      "bind": { "input": "range", "min": 0.05, "max": 2, "step": 0.05, "name": "矢印倍率: " }
+    },
+    { "name": "pitchX", "value": 24 },
+    { "name": "pitchY", "value": 28 }
+  ],
+  "data": { "name": "dataset" },
+  "transform": [
+    { "calculate": "datum.posX_mm + datum.rawX_nm * arrowScale", "as": "x2" },
+    { "calculate": "datum.posY_mm + datum.rawY_nm * arrowScale", "as": "y2" },
+    { "calculate": "sqrt(datum.rawX_nm * datum.rawX_nm + datum.rawY_nm * datum.rawY_nm)", "as": "vecLen" },
+    { "calculate": "atan2(datum.rawY_nm, datum.rawX_nm) * 180 / PI", "as": "angleDeg" }
+  ],
+  "layer": [
+    {
+      "description": "Shot枠（Waferマップ共通仕様）",
+      "transform": [
+        { "aggregate": [], "groupby": ["shotX_mm", "shotY_mm"] },
+        { "calculate": "datum.shotX_mm - pitchX / 2", "as": "fx" },
+        { "calculate": "datum.shotX_mm + pitchX / 2", "as": "fx2" },
+        { "calculate": "datum.shotY_mm - pitchY / 2", "as": "fy" },
+        { "calculate": "datum.shotY_mm + pitchY / 2", "as": "fy2" }
+      ],
+      "mark": { "type": "rect", "fill": null, "stroke": "#C8C8C8", "strokeWidth": 0.5 },
+      "encoding": {
+        "x": { "field": "fx", "type": "quantitative" },
+        "x2": { "field": "fx2" },
+        "y": { "field": "fy", "type": "quantitative" },
+        "y2": { "field": "fy2" }
+      }
+    },
+    {
+      "description": "ベクトル本体（rule）",
+      "mark": { "type": "rule", "strokeWidth": 1.2 },
+      "encoding": {
+        "x": { "field": "posX_mm", "type": "quantitative", "scale": { "domain": [-165, 165] }, "axis": null },
+        "y": { "field": "posY_mm", "type": "quantitative", "scale": { "domain": [-165, 165] }, "axis": null },
+        "x2": { "field": "x2" },
+        "y2": { "field": "y2" },
+        "color": {
+          "field": "vecLen",
+          "type": "quantitative",
+          "scale": { "scheme": "viridis" },
+          "legend": { "title": "ベクトル長 (nm)" }
+        },
+        "tooltip": [
+          { "field": "posX_mm", "title": "X (mm)" },
+          { "field": "posY_mm", "title": "Y (mm)" },
+          { "field": "rawX_nm", "title": "計測値X (nm)" },
+          { "field": "rawY_nm", "title": "計測値Y (nm)" },
+          { "field": "vecLen", "title": "ベクトル長 (nm)", "format": ".1f" }
+        ]
+      }
+    },
+    {
+      "description": "矢じり（角度つきtriangle）",
+      "mark": { "type": "point", "shape": "triangle", "filled": true, "size": 18 },
+      "encoding": {
+        "x": { "field": "x2", "type": "quantitative" },
+        "y": { "field": "y2", "type": "quantitative" },
+        "angle": { "field": "angleDeg", "type": "quantitative", "scale": { "domain": [ -180, 180 ], "range": [ 270, -90 ] } },
+        "color": { "field": "vecLen", "type": "quantitative", "scale": { "scheme": "viridis" }, "legend": null }
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container",
+  "config": { "view": { "stroke": null } }
+}

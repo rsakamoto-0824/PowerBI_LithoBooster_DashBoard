@@ -1,0 +1,19 @@
+table 装置
+
+	column EQPID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: EQPID
+
+	partition 装置 = m
+		mode: import
+		source =
+				let
+				    // CanonとNikon両ビューの号機を統合して一覧にする
+				    CanonEqp = Table.SelectColumns(CANON, {"EQPID"}),
+				    NikonEqp = Table.SelectColumns(NIKON, {"EQPID"}),
+				    Combined = Table.Combine({CanonEqp, NikonEqp}),
+				    Dedup = Table.Distinct(Combined),
+				    Sorted = Table.Sort(Dedup, {{"EQPID", Order.Ascending}})
+				in
+				    Sorted

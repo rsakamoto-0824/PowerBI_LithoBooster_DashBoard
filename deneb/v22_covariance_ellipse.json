@@ -1,0 +1,56 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-22 / V-23 共分散楕円マップ（雛形）。Denebに渡すフィールド: cx（位置X, mm）, cy（位置Y, mm）, varX, varY, covXY（DAXメジャーで位置ごとに算出したWafer間の分散・共分散）, waferCount。楕円は共分散行列の固有値・主軸から媒介変数表示（sequence + flatten）で折れ線として描く。requirements.md「共分散楕円の仕様」参照",
+  "usermeta": {
+    "deneb": { "build": "skeleton", "metaVersion": 1 },
+    "note": "サイズ=固有値の平方根×k（既定k=2）、傾きθ=0.5*atan2(2Cxy, Vx-Vy)、色=|相関係数|。Wafer数3未満は非表示"
+  },
+  "params": [
+    {
+      "name": "sizeK",
+      "value": 2,
+      "bind": { "input": "range", "min": 0.5, "max": 6, "step": 0.5, "name": "楕円倍率 k: " }
+    }
+  ],
+  "data": { "name": "dataset" },
+  "transform": [
+    { "filter": "datum.waferCount >= 3" },
+    { "calculate": "(datum.varX + datum.varY) / 2 + sqrt(max(pow((datum.varX + datum.varY) / 2, 2) - (datum.varX * datum.varY - datum.covXY * datum.covXY), 0))", "as": "lambda1" },
+    { "calculate": "(datum.varX + datum.varY) / 2 - sqrt(max(pow((datum.varX + datum.varY) / 2, 2) - (datum.varX * datum.varY - datum.covXY * datum.covXY), 0))", "as": "lambda2" },
+    { "calculate": "0.5 * atan2(2 * datum.covXY, datum.varX - datum.varY)", "as": "theta" },
+    { "calculate": "abs(datum.covXY) / (sqrt(datum.varX * datum.varY) + 1e-9)", "as": "absCorr" },
+    { "calculate": "sqrt(max(datum.lambda1, 0)) * sizeK", "as": "semiA" },
+    { "calculate": "sqrt(max(datum.lambda2, 0)) * sizeK", "as": "semiB" },
+    { "calculate": "sequence(0, 6.6, 0.3)", "as": "t" },
+    { "flatten": [ "t" ] },
+    { "calculate": "datum.cx + (datum.semiA * cos(datum.t) * cos(datum.theta) - datum.semiB * sin(datum.t) * sin(datum.theta)) * 0.000001", "as": "ex" },
+    { "calculate": "datum.cy + (datum.semiA * cos(datum.t) * sin(datum.theta) + datum.semiB * sin(datum.t) * cos(datum.theta)) * 0.000001", "as": "ey" }
+  ],
+  "layer": [
+    {
+      "description": "楕円（媒介変数の折れ線。半径nm→mm換算0.000001に倍率は要調整）",
+      "mark": { "type": "line", "interpolate": "linear-closed", "strokeWidth": 1, "filled": true, "fillOpacity": 0.85 },
+      "encoding": {
+        "x": { "field": "ex", "type": "quantitative", "scale": { "domain": [ -165, 165 ] }, "axis": null },
+        "y": { "field": "ey", "type": "quantitative", "scale": { "domain": [ -165, 165 ] }, "axis": null },
+        "detail": { "field": "cx" },
+        "color": {
+          "field": "absCorr",
+          "type": "quantitative",
+          "scale": { "scheme": "plasma", "domain": [ 0, 1 ] },
+          "legend": { "title": "|相関係数 r|" }
+        },
+        "order": { "field": "t" },
+        "tooltip": [
+          { "field": "cx", "title": "位置X (mm)" },
+          { "field": "cy", "title": "位置Y (mm)" },
+          { "field": "absCorr", "title": "|相関係数|", "format": ".2f" },
+          { "field": "waferCount", "title": "Wafer数" }
+        ]
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container",
+  "config": { "view": { "stroke": null } }
+}

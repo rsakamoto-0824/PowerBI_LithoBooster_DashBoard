@@ -1,0 +1,368 @@
+table CANON
+
+	/// 選択範囲の計測値Xの平均（nm）
+	measure '計測値X 平均' = AVERAGE ( 'CANON'[RAW_DATA_X] )
+		formatString: 0.00
+
+	measure '計測値Y 平均' = AVERAGE ( 'CANON'[RAW_DATA_Y] )
+		formatString: 0.00
+
+	measure '計測値X 3σ' = 3 * STDEV.P ( 'CANON'[RAW_DATA_X] )
+		formatString: 0.00
+
+	measure '計測値Y 3σ' = 3 * STDEV.P ( 'CANON'[RAW_DATA_Y] )
+		formatString: 0.00
+
+	/// KPIカード用の「平均 ± 3σ」表示文字列（nm）
+	measure '計測値X 平均±3σ 表示' =
+			VAR AvgX = [計測値X 平均]
+			VAR Sigma3X = [計測値X 3σ]
+			RETURN
+				FORMAT ( AvgX, "0.0" ) & " ± " & FORMAT ( Sigma3X, "0.0" ) & " nm"
+
+	measure '計測値Y 平均±3σ 表示' =
+			VAR AvgY = [計測値Y 平均]
+			VAR Sigma3Y = [計測値Y 3σ]
+			RETURN
+				FORMAT ( AvgY, "0.0" ) & " ± " & FORMAT ( Sigma3Y, "0.0" ) & " nm"
+
+	measure '計測値X RMS' =
+			VAR SumSq = SUMX ( 'CANON', 'CANON'[RAW_DATA_X] * 'CANON'[RAW_DATA_X] )
+			VAR Points = COUNTROWS ( 'CANON' )
+			RETURN
+				SQRT ( DIVIDE ( SumSq, Points ) )
+		formatString: 0.00
+
+	measure '計測値Y RMS' =
+			VAR SumSq = SUMX ( 'CANON', 'CANON'[RAW_DATA_Y] * 'CANON'[RAW_DATA_Y] )
+			VAR Points = COUNTROWS ( 'CANON' )
+			RETURN
+				SQRT ( DIVIDE ( SumSq, Points ) )
+		formatString: 0.00
+
+	/// 計測値ベクトル長 √(X²+Y²) の平均（nm）
+	measure 'ベクトル長 平均' =
+			AVERAGEX (
+				'CANON',
+				SQRT (
+					'CANON'[RAW_DATA_X] * 'CANON'[RAW_DATA_X]
+						+ 'CANON'[RAW_DATA_Y] * 'CANON'[RAW_DATA_Y]
+				)
+			)
+		formatString: 0.00
+
+	measure 'Wafer数' = DISTINCTCOUNT ( 'CANON'[WAFER_ID] )
+		formatString: 0
+
+	measure 'Lot数' = DISTINCTCOUNT ( 'CANON'[LOT_ID] )
+		formatString: 0
+
+	measure '測定点数' = COUNTROWS ( 'CANON' )
+		formatString: #,0
+
+	/// 判定=0の測定点の割合（0/1の意味はI-002で確認中）
+	measure '判定0率X' =
+			VAR ZeroPoints =
+				CALCULATE ( COUNTROWS ( 'CANON' ), 'CANON'[RAW_DATA_STSX] = 0 )
+			VAR AllPoints = COUNTROWS ( 'CANON' )
+			RETURN
+				DIVIDE ( ZeroPoints, AllPoints )
+		formatString: 0.0%
+
+	column TEC_KIND
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TEC_KIND
+
+	column LOT_ID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: LOT_ID
+
+	column WAFER_ID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: WAFER_ID
+
+	column WAFER_NO
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: WAFER_NO
+
+	column CREATE_TIME
+		dataType: dateTime
+		formatString: yyyy/mm/dd hh:nn:ss
+		summarizeBy: none
+		sourceColumn: CREATE_TIME
+
+	column MEASUREMENT_TIME
+		dataType: dateTime
+		formatString: yyyy/mm/dd hh:nn:ss
+		summarizeBy: none
+		sourceColumn: MEASUREMENT_TIME
+
+	column PROCESS
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PROCESS
+
+	column OPERATION
+		dataType: string
+		summarizeBy: none
+		sourceColumn: OPERATION
+
+	column PRODUCT
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PRODUCT
+
+	column EQPID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: EQPID
+
+	column DEVICE_TYPE
+		dataType: string
+		summarizeBy: none
+		sourceColumn: DEVICE_TYPE
+
+	column CTRL_JOB
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CTRL_JOB
+
+	column SHOTINFO_SHOTNO
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: SHOTINFO_SHOTNO
+
+	column SHOTINFO_PosX
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: SHOTINFO_PosX
+
+	column SHOTINFO_PosY
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: SHOTINFO_PosY
+
+	column SHOTINFO_DIRECTION
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: SHOTINFO_DIRECTION
+
+	column IS_AGA_SAMPLE_SHOTS
+		dataType: boolean
+		summarizeBy: none
+		sourceColumn: IS_AGA_SAMPLE_SHOTS
+
+	column MARKINFO_MARKNO
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: MARKINFO_MARKNO
+
+	column MARKINFO_POSX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: MARKINFO_POSX
+
+	column MARKINFO_POSY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: MARKINFO_POSY
+
+	column AGA_LINEAR_MX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_LINEAR_MX
+
+	column AGA_LINEAR_MY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_LINEAR_MY
+
+	column AGA_LINEAR_TX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_LINEAR_TX
+
+	column AGA_LINEAR_TY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_LINEAR_TY
+
+	column AGA_LINEAR_SX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_LINEAR_SX
+
+	column AGA_LINEAR_SY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_LINEAR_SY
+
+	column AGA_SHOT_MX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_SHOT_MX
+
+	column AGA_SHOT_MY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_SHOT_MY
+
+	column AGA_SHOT_TX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_SHOT_TX
+
+	column AGA_SHOT_TY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: AGA_SHOT_TY
+
+	column PSO_LINEAR_MX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: PSO_LINEAR_MX
+
+	column PSO_LINEAR_MY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: PSO_LINEAR_MY
+
+	column PSO_LINEAR_TX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: PSO_LINEAR_TX
+
+	column PSO_LINEAR_TY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: PSO_LINEAR_TY
+
+	column PSO_LINEAR_SX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: PSO_LINEAR_SX
+
+	column PSO_LINEAR_SY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: PSO_LINEAR_SY
+
+	column PSO_LINEAR_3SX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: PSO_LINEAR_3SX
+
+	column PSO_LINEAR_3SY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: PSO_LINEAR_3SY
+
+	column SEPA_SHOTFORM_SMAGX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SEPA_SHOTFORM_SMAGX
+
+	column SEPA_SHOTFORM_SMAGY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SEPA_SHOTFORM_SMAGY
+
+	column SEPA_SHOTFORM_SROTX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SEPA_SHOTFORM_SROTX
+
+	column SEPA_SHOTFORM_SROTY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SEPA_SHOTFORM_SROTY
+
+	column SEPA_SHOTDATA_SHIFTX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SEPA_SHOTDATA_SHIFTX
+
+	column SEPA_SHOTDATA_SHIFTY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SEPA_SHOTDATA_SHIFTY
+
+	column SAME_SHOTFORM_SMAGX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SAME_SHOTFORM_SMAGX
+
+	column SAME_SHOTFORM_SMAGY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SAME_SHOTFORM_SMAGY
+
+	column SAME_SHOTFORM_SROTX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SAME_SHOTFORM_SROTX
+
+	column SAME_SHOTFORM_SROTY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SAME_SHOTFORM_SROTY
+
+	column SAME_SHOTDATA_SHIFTX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SAME_SHOTDATA_SHIFTX
+
+	column SAME_SHOTDATA_SHIFTY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SAME_SHOTDATA_SHIFTY
+
+	column RAW_DATA_X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: RAW_DATA_X
+
+	column RAW_DATA_Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: RAW_DATA_Y
+
+	column RAW_DATA_STSX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: RAW_DATA_STSX
+
+	column RAW_DATA_STSY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: RAW_DATA_STSY
+
+	column ST_TIMESTAMP
+		dataType: dateTime
+		formatString: yyyy/mm/dd hh:nn:ss
+		summarizeBy: none
+		sourceColumn: ST_TIMESTAMP
+
+	column 計測日
+		dataType: dateTime
+		formatString: yyyy/mm/dd
+		summarizeBy: none
+		sourceColumn: 計測日
+
+	partition CANON = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(SampleDataFolder & "V_EQP_WAFER_LITHOBOOSTER_CANON_sample.csv"),
+				        [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"TEC_KIND", type text}, {"LOT_ID", type text}, {"WAFER_ID", type text}, {"WAFER_NO", Int64.Type}, {"CREATE_TIME", type datetime}, {"MEASUREMENT_TIME", type datetime}, {"PROCESS", type text}, {"OPERATION", type text}, {"PRODUCT", type text}, {"EQPID", type text}, {"DEVICE_TYPE", type text}, {"CTRL_JOB", type text}, {"SHOTINFO_SHOTNO", Int64.Type}, {"SHOTINFO_PosX", Int64.Type}, {"SHOTINFO_PosY", Int64.Type}, {"SHOTINFO_DIRECTION", Int64.Type}, {"IS_AGA_SAMPLE_SHOTS", type logical}, {"MARKINFO_MARKNO", Int64.Type}, {"MARKINFO_POSX", type number}, {"MARKINFO_POSY", type number}, {"AGA_LINEAR_MX", type number}, {"AGA_LINEAR_MY", type number}, {"AGA_LINEAR_TX", type number}, {"AGA_LINEAR_TY", type number}, {"AGA_LINEAR_SX", type number}, {"AGA_LINEAR_SY", type number}, {"AGA_SHOT_MX", type number}, {"AGA_SHOT_MY", type number}, {"AGA_SHOT_TX", type number}, {"AGA_SHOT_TY", type number}, {"PSO_LINEAR_MX", type number}, {"PSO_LINEAR_MY", type number}, {"PSO_LINEAR_TX", type number}, {"PSO_LINEAR_TY", type number}, {"PSO_LINEAR_SX", type number}, {"PSO_LINEAR_SY", type number}, {"PSO_LINEAR_3SX", type number}, {"PSO_LINEAR_3SY", type number}, {"SEPA_SHOTFORM_SMAGX", type number}, {"SEPA_SHOTFORM_SMAGY", type number}, {"SEPA_SHOTFORM_SROTX", type number}, {"SEPA_SHOTFORM_SROTY", type number}, {"SEPA_SHOTDATA_SHIFTX", type number}, {"SEPA_SHOTDATA_SHIFTY", type number}, {"SAME_SHOTFORM_SMAGX", type number}, {"SAME_SHOTFORM_SMAGY", type number}, {"SAME_SHOTFORM_SROTX", type number}, {"SAME_SHOTFORM_SROTY", type number}, {"SAME_SHOTDATA_SHIFTX", type number}, {"SAME_SHOTDATA_SHIFTY", type number}, {"RAW_DATA_X", type number}, {"RAW_DATA_Y", type number}, {"RAW_DATA_STSX", type number}, {"RAW_DATA_STSY", type number}, {"ST_TIMESTAMP", type datetime}}, "en-US"),
+				    // 日付テーブルとのリレーション用に計測日（日付型）を追加する
+				    AddMeasureDate = Table.AddColumn(Typed, "計測日", each Date.From([MEASUREMENT_TIME]), type date)
+				in
+				    AddMeasureDate
