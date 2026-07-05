@@ -1,0 +1,15 @@
+relationship CanonDate
+	fromColumn: CANON.計測日
+	toColumn: 日付.Date
+
+relationship NikonDate
+	fromColumn: NIKON.計測日
+	toColumn: 日付.Date
+
+relationship CanonEqp
+	fromColumn: CANON.EQPID
+	toColumn: 装置.EQPID
+
+relationship NikonEqp
+	fromColumn: NIKON.EQPID
+	toColumn: 装置.EQPID

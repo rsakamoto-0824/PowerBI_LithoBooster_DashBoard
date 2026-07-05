@@ -1,0 +1,47 @@
+table 日付
+	dataCategory: Time
+
+	column Date
+		isKey
+		dataType: dateTime
+		formatString: yyyy/mm/dd
+		summarizeBy: none
+		sourceColumn: Date
+
+	column 年
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: 年
+
+	column 月
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: 月
+
+	column 日
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: 日
+
+	column 年月
+		dataType: string
+		summarizeBy: none
+		sourceColumn: 年月
+
+	partition 日付 = m
+		mode: import
+		source =
+				let
+				    // カレンダー範囲は運用開始時に必要に応じて広げる
+				    StartDate = #date(2026, 1, 1),
+				    EndDate = #date(2027, 12, 31),
+				    DayCount = Duration.Days(EndDate - StartDate) + 1,
+				    Dates = List.Dates(StartDate, DayCount, #duration(1, 0, 0, 0)),
+				    ToTable = Table.FromList(Dates, Splitter.SplitByNothing(), {"Date"}),
+				    TypedDate = Table.TransformColumnTypes(ToTable, {{"Date", type date}}),
+				    AddYear = Table.AddColumn(TypedDate, "年", each Date.Year([Date]), Int64.Type),
+				    AddMonth = Table.AddColumn(AddYear, "月", each Date.Month([Date]), Int64.Type),
+				    AddDay = Table.AddColumn(AddMonth, "日", each Date.Day([Date]), Int64.Type),
+				    AddYearMonth = Table.AddColumn(AddDay, "年月", each Date.ToText([Date], "yyyy/MM"), type text)
+				in
+				    AddYearMonth

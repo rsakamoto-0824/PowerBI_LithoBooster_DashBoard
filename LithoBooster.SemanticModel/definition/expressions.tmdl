@@ -1,0 +1,4 @@
+/// 開発用ダミーCSVの置き場所。各自の環境に合わせて変更する
+/// （例: C:\LithoBooster\sample_data\）。本番はVertica DirectQueryへ切替（design.md参照）
+expression SampleDataFolder = "C:\LithoBooster\sample_data\" meta [IsParameterQuery = true, Type = "Text", IsParameterQueryRequired = true]
+	annotation PBI_ResultType = Text

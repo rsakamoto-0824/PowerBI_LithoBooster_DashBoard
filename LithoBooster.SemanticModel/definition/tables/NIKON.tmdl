@@ -1,0 +1,333 @@
+table NIKON
+
+	measure '補正量X 平均' = AVERAGE ( 'NIKON'[CORRDATA_OFSETX] )
+		formatString: 0.00
+
+	measure '補正量Y 平均' = AVERAGE ( 'NIKON'[CORRDATA_OFSETY] )
+		formatString: 0.00
+
+	measure '補正量X 3σ' = 3 * STDEV.P ( 'NIKON'[CORRDATA_OFSETX] )
+		formatString: 0.00
+
+	measure '補正量Y 3σ' = 3 * STDEV.P ( 'NIKON'[CORRDATA_OFSETY] )
+		formatString: 0.00
+
+	/// KPIカード用の「平均 ± 3σ」表示文字列（nm）
+	measure '補正量X 平均±3σ 表示' =
+			VAR AvgX = [補正量X 平均]
+			VAR Sigma3X = [補正量X 3σ]
+			RETURN
+				FORMAT ( AvgX, "0.0" ) & " ± " & FORMAT ( Sigma3X, "0.0" ) & " nm"
+
+	measure '補正量Y 平均±3σ 表示' =
+			VAR AvgY = [補正量Y 平均]
+			VAR Sigma3Y = [補正量Y 3σ]
+			RETURN
+				FORMAT ( AvgY, "0.0" ) & " ± " & FORMAT ( Sigma3Y, "0.0" ) & " nm"
+
+	measure 'Wafer数 N' = DISTINCTCOUNT ( 'NIKON'[WAFER_ID] )
+		formatString: 0
+
+	measure 'Lot数 N' = DISTINCTCOUNT ( 'NIKON'[LOT_ID] )
+		formatString: 0
+
+	measure '補正点数' = COUNTROWS ( 'NIKON' )
+		formatString: #,0
+
+	column TEC_KIND
+		dataType: string
+		summarizeBy: none
+		sourceColumn: TEC_KIND
+
+	column LOT_ID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: LOT_ID
+
+	column WAFER_ID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: WAFER_ID
+
+	column WAFER_NO
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: WAFER_NO
+
+	column CREATE_TIME
+		dataType: dateTime
+		formatString: yyyy/mm/dd hh:nn:ss
+		summarizeBy: none
+		sourceColumn: CREATE_TIME
+
+	column MEASUREMENT_TIME
+		dataType: dateTime
+		formatString: yyyy/mm/dd hh:nn:ss
+		summarizeBy: none
+		sourceColumn: MEASUREMENT_TIME
+
+	column PROCESS
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PROCESS
+
+	column OPERATION
+		dataType: string
+		summarizeBy: none
+		sourceColumn: OPERATION
+
+	column PRODUCT
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PRODUCT
+
+	column EQPID
+		dataType: string
+		summarizeBy: none
+		sourceColumn: EQPID
+
+	column DEVICE_TYPE
+		dataType: string
+		summarizeBy: none
+		sourceColumn: DEVICE_TYPE
+
+	column CTRL_JOB
+		dataType: string
+		summarizeBy: none
+		sourceColumn: CTRL_JOB
+
+	column WAFER_OFSETX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: WAFER_OFSETX
+
+	column WAFER_OFSETY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: WAFER_OFSETY
+
+	column WAFER_SCALX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: WAFER_SCALX
+
+	column WAFER_SCALY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: WAFER_SCALY
+
+	column WAFER_ROTX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: WAFER_ROTX
+
+	column WAFER_ROTY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: WAFER_ROTY
+
+	column SHOT_OFSETX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOT_OFSETX
+
+	column SHOT_OFSETY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOT_OFSETY
+
+	column SHOT_SCALX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOT_SCALX
+
+	column SHOT_SCALY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOT_SCALY
+
+	column SHOT_ROTX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOT_ROTX
+
+	column SHOT_ROTY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOT_ROTY
+
+	column CORRDATA_ID
+		dataType: int64
+		summarizeBy: none
+		sourceColumn: CORRDATA_ID
+
+	column CORRDATA_POSX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: CORRDATA_POSX
+
+	column CORRDATA_POSY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: CORRDATA_POSY
+
+	column CORRDATA_OFSETX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: CORRDATA_OFSETX
+
+	column CORRDATA_OFSETY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: CORRDATA_OFSETY
+
+	column CORRDATA_SCALX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: CORRDATA_SCALX
+
+	column CORRDATA_SCALY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: CORRDATA_SCALY
+
+	column CORRDATA_ROTX
+		dataType: double
+		summarizeBy: none
+		sourceColumn: CORRDATA_ROTX
+
+	column CORRDATA_ROTY
+		dataType: double
+		summarizeBy: none
+		sourceColumn: CORRDATA_ROTY
+
+	column SHOTFAC02X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC02X
+
+	column SHOTFAC03X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC03X
+
+	column SHOTFAC04X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC04X
+
+	column SHOTFAC05X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC05X
+
+	column SHOTFAC06X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC06X
+
+	column SHOTFAC11Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC11Y
+
+	column SHOTFAC02Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC02Y
+
+	column SHOTFAC12Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC12Y
+
+	column SHOTFAC03Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC03Y
+
+	column SHOTFAC13Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC13Y
+
+	column SHOTFAC04Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC04Y
+
+	column SHOTFAC14Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC14Y
+
+	column SHOTFAC05Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC05Y
+
+	column SHOTFAC15Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC15Y
+
+	column SHOTFAC06Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC06Y
+
+	column SHOTFAC20X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC20X
+
+	column SHOTFAC20Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC20Y
+
+	column SHOTFAC30X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC30X
+
+	column SHOTFAC11X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC11X
+
+	column SHOTFAC12X
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC12X
+
+	column SHOTFAC21Y
+		dataType: double
+		summarizeBy: none
+		sourceColumn: SHOTFAC21Y
+
+	column ST_TIMESTAMP
+		dataType: dateTime
+		formatString: yyyy/mm/dd hh:nn:ss
+		summarizeBy: none
+		sourceColumn: ST_TIMESTAMP
+
+	column 計測日
+		dataType: dateTime
+		formatString: yyyy/mm/dd
+		summarizeBy: none
+		sourceColumn: 計測日
+
+	partition NIKON = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(
+				        File.Contents(SampleDataFolder & "V_EQP_WAFER_LITHOBOOSTER_NIKON_sample.csv"),
+				        [Delimiter = ",", Encoding = 65001, QuoteStyle = QuoteStyle.Csv]),
+				    Headers = Table.PromoteHeaders(Source, [PromoteAllScalars = true]),
+				    Typed = Table.TransformColumnTypes(Headers, {{"TEC_KIND", type text}, {"LOT_ID", type text}, {"WAFER_ID", type text}, {"WAFER_NO", Int64.Type}, {"CREATE_TIME", type datetime}, {"MEASUREMENT_TIME", type datetime}, {"PROCESS", type text}, {"OPERATION", type text}, {"PRODUCT", type text}, {"EQPID", type text}, {"DEVICE_TYPE", type text}, {"CTRL_JOB", type text}, {"WAFER_OFSETX", type number}, {"WAFER_OFSETY", type number}, {"WAFER_SCALX", type number}, {"WAFER_SCALY", type number}, {"WAFER_ROTX", type number}, {"WAFER_ROTY", type number}, {"SHOT_OFSETX", type number}, {"SHOT_OFSETY", type number}, {"SHOT_SCALX", type number}, {"SHOT_SCALY", type number}, {"SHOT_ROTX", type number}, {"SHOT_ROTY", type number}, {"CORRDATA_ID", Int64.Type}, {"CORRDATA_POSX", type number}, {"CORRDATA_POSY", type number}, {"CORRDATA_OFSETX", type number}, {"CORRDATA_OFSETY", type number}, {"CORRDATA_SCALX", type number}, {"CORRDATA_SCALY", type number}, {"CORRDATA_ROTX", type number}, {"CORRDATA_ROTY", type number}, {"SHOTFAC02X", type number}, {"SHOTFAC03X", type number}, {"SHOTFAC04X", type number}, {"SHOTFAC05X", type number}, {"SHOTFAC06X", type number}, {"SHOTFAC11Y", type number}, {"SHOTFAC02Y", type number}, {"SHOTFAC12Y", type number}, {"SHOTFAC03Y", type number}, {"SHOTFAC13Y", type number}, {"SHOTFAC04Y", type number}, {"SHOTFAC14Y", type number}, {"SHOTFAC05Y", type number}, {"SHOTFAC15Y", type number}, {"SHOTFAC06Y", type number}, {"SHOTFAC20X", type number}, {"SHOTFAC20Y", type number}, {"SHOTFAC30X", type number}, {"SHOTFAC11X", type number}, {"SHOTFAC12X", type number}, {"SHOTFAC21Y", type number}, {"ST_TIMESTAMP", type datetime}}, "en-US"),
+				    // 日付テーブルとのリレーション用に計測日（日付型）を追加する
+				    AddMeasureDate = Table.AddColumn(Typed, "計測日", each Date.From([MEASUREMENT_TIME]), type date)
+				in
+				    AddMeasureDate

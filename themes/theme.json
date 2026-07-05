@@ -1,0 +1,69 @@
+{
+  "name": "LithoBooster",
+  "dataColors": [
+    "#1E2761",
+    "#028090",
+    "#F96167",
+    "#5B8DB8",
+    "#E08A4E",
+    "#84B59F",
+    "#2E75B6",
+    "#B85042"
+  ],
+  "background": "#FFFFFF",
+  "foreground": "#2B2B2B",
+  "tableAccent": "#1E2761",
+  "good": "#028090",
+  "neutral": "#E08A4E",
+  "bad": "#F96167",
+  "textClasses": {
+    "title": {
+      "fontFace": "Yu Gothic UI",
+      "fontSize": 14,
+      "color": "#1E2761"
+    },
+    "header": {
+      "fontFace": "Yu Gothic UI",
+      "fontSize": 12,
+      "color": "#1E2761"
+    },
+    "label": {
+      "fontFace": "Yu Gothic UI",
+      "fontSize": 10,
+      "color": "#2B2B2B"
+    },
+    "callout": {
+      "fontFace": "Yu Gothic UI",
+      "fontSize": 24,
+      "color": "#1E2761"
+    }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#FFFFFF" } },
+            "transparency": 0
+          }
+        ],
+        "border": [
+          {
+            "show": true,
+            "color": { "solid": { "color": "#D5DAE5" } },
+            "radius": 4
+          }
+        ],
+        "title": [
+          {
+            "show": true,
+            "fontColor": { "solid": { "color": "#1E2761" } },
+            "fontSize": 10,
+            "bold": true
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,12 @@
+model Model
+	culture: ja-JP
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: ja-JP
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+ref table CANON
+ref table NIKON
+ref table 日付
+ref table 装置
