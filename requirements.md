@@ -115,7 +115,7 @@ Nikonが補正前Shot配列）。
 #### P3: 詳細分析（Canon）
 
 - 特定Lot・Waferまで絞り込んだ状態で詳しく確認するページ（P2からのドリルスルー先）
-- 計測値ベクトルマップ、計測値X/Yヒートマップ、面内共分散楕円
+- 計測値ベクトルマップ、計測値X/Yヒートマップ、計測値ベクトル長ヒートマップ、面内共分散楕円
 - 補正前Shot配列マップ（Shotごとの線形補正値 SEPA + SAME から逆算、誇張表示）
 - Shotごとの補正値6種（SMAGX/SMAGY/SROTX/SROTY/SHIFTX/SHIFTY）の
   SEPA / SAME別プロット
@@ -131,20 +131,23 @@ Nikonが補正前Shot配列）。
 #### P5: 補正前Shot配列 俯瞰（Nikon）
 
 - Shotごとの補正量（`CORRDATA_*`）から**補正前のShot配列を逆算**し、
-  公称格子と重ねて誇張表示する（取得データ全体の平均から再構成）
+  公称格子と重ねて誇張表示する
+- **装置（EQPID）別 × OPERATION別の小マルチ**で描画し、装置・作業ごとの
+  補正傾向を俯瞰で比較する
 - 気になる装置・Lotを選択して P6 詳細分析へドリルスルーする
 
 #### P6: 詳細分析（Nikon）
 
 - 特定Lot・Waferまで絞り込んだ状態で詳しく確認するページ（P5からのドリルスルー先）
 - 補正点ベクトルマップ（成分切替）、補正前Shot配列マップ（Wafer単位）
-- Shot高次補正係数（`SHOTFAC*`）の係数別トレンド・比較表示
+- Shot補正成分の棒グラフ（線形補正 SHOT_OFSET/SCAL/ROT と高次補正係数 SHOTFAC* を並べて比較）
 
 #### P7: Shotスタック分析
 
 - **Canonビューの計測値X/Yに対する分析**とする
 - 全ShotをShot座標系（Shot中心原点）に重ねて、Shot内の系統的な傾向を表示
 - Mark位置ごとの平均ベクトル・共分散楕円・計測値X/Yの分布（→ 4.5 観点E）
+- Scan方向（`SHOTINFO_DIRECTION`）ごとの計測値X/Y分布の比較
 
 #### 補足ページ
 
@@ -189,6 +192,7 @@ Nikonが補正前Shot配列）。
 | V-01 | 計測値X/Yの箱ひげ図（OPERATION別。X成分とY成分を並べて表示） | Canon | RAW_DATA_X/Y | 箱ひげ図 | P1 |
 | V-02 | 補正量X/Yの箱ひげ図（OPERATION別。X成分とY成分を並べて表示） | Nikon | CORRDATA_OFSETX/Y | 箱ひげ図 | P4 |
 | V-03 | Shotごとの補正値6種（SMAGX/SMAGY/SROTX/SROTY/SHIFTX/SHIFTY）をSEPA / SAME別にShot番号に対して表示する小マルチ | Canon | SEPA_*, SAME_* | 小マルチ折れ線 | P3 |
+| V-28 | Shot補正成分の棒グラフ: 線形補正（SHOT_OFSET/SCAL/ROTのX/Y）と高次補正係数（SHOTFAC*）を並べて大きさを比較 | Nikon | SHOT_*, SHOTFAC* | バー | P6 |
 | V-04 | 計測判定の0/1比率のカテゴリ別比較 | Canon | RAW_DATA_STSX/Y | 100%積み上げバー | P1 |
 | V-05 | Lot内順序傾向（Wafer番号 vs 成分・残差。Lot間で重ね描き） | 両方 | WAFER_NO + 各成分 | 折れ線 | P1 / P4 |
 
@@ -208,6 +212,7 @@ Nikonが補正前Shot配列）。
 |---|---|---|---|---|---|
 | V-11 | 計測値ベクトルマップ（絞り込んだ範囲の計測値X/Yを矢印表示、倍率調整可） | Canon | Shot/Mark座標 + RAW_DATA_X/Y | Deneb | P3 |
 | V-25 | 計測値X/Yヒートマップ（Shot単位平均の色分けマップ。X成分・Y成分を並置） | Canon | 同上 | Deneb | P3 |
+| V-27 | 計測値ベクトル長ヒートマップ（√(X²+Y²) のShot単位平均を色分け表示） | Canon | 同上 | Deneb | P3 |
 | V-12 | 平均ベクトル場 俯瞰: 取得データ全体の計測位置ごと平均計測値を、装置別×OPERATION別の小マルチで表示。**矢印の色はベクトルの長さ**（カラースケール） | Canon | 同上 | Deneb | P2 |
 | V-24 | ~~平均ベクトル場 俯瞰（Nikon）~~ → V-18 補正前Shot配列マップに変更 | Nikon | - | - | - |
 | V-13 | Shot単位残差RMSのヒートマップ（色分けWaferマップ） | Canon | 同上 | Deneb | P3 |
@@ -222,7 +227,7 @@ Nikonが補正前Shot配列）。
 | V-16 | ~~補正前後の想定ベクトルマップ切替~~ → 不要（V-26 補正前Shot配列に置き換え） | Canon | - | - | - |
 | V-17 | ~~補正効果の定量比較~~ → 不要 | Canon | - | - | - |
 | V-26 | 補正前Shot配列マップ: Shotごとの線形補正値（SEPA + SAME）から補正前のShot配列（格子の歪み）を逆算し、公称格子と重ねて誇張表示 | Canon | SEPA_* / SAME_* + Shot座標 | Deneb | P3 |
-| V-18 | 補正前Shot配列マップ: Shotごとの補正量（CORRDATA）から補正前のShot配列を逆算し、公称格子と重ねて誇張表示 | Nikon | CORRDATA_* + 補正点座標 | Deneb | P5 |
+| V-18 | 補正前Shot配列マップ: Shotごとの補正量（CORRDATA）から補正前のShot配列を逆算し、公称格子と重ねて誇張表示。**装置別 × OPERATION別の小マルチ**で描画 | Nikon | CORRDATA_* + 補正点座標 | Deneb | P5 |
 
 #### 観点E: Shotスタック時の傾向（Shot座標系での重ね合わせ）
 
@@ -232,6 +237,7 @@ Nikonが補正前Shot配列）。
 | V-20 | ~~スタック時のばらつき表示（Mark位置ごとの3σ）~~ → V-23の共分散楕円に統合 | Canon | 同上 | - | - |
 | V-21 | Shotスタック時の計測値X/YのMark位置別分布（箱ひげ図） | Canon | MARKINFO_POS + RAW_DATA_X/Y | 箱ひげ図 | P7 |
 | V-23 | Shotスタック共分散楕円マップ: Mark位置ごとに全Shot・全Waferの残差X/Yのばらつきを共分散楕円で表示（サイズ・傾き・色の規則はV-22と共通）。V-20の3σ表示はこの楕円表示に置き換える | Canon | MARKINFO_POS + RAW_DATA_X/Y | Deneb | P7 |
+| V-29 | Scan方向（SHOTINFO_DIRECTION）ごとの計測値X/Y箱ひげ図 | Canon | SHOTINFO_DIRECTION + RAW_DATA_X/Y | 箱ひげ図 | P7 |
 
 #### 共分散楕円の仕様（V-22 / V-23 共通）
 
