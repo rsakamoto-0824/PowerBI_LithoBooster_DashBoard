@@ -110,6 +110,13 @@ PSO_3SIGMA_MIN_NM = 3.0
 PSO_3SIGMA_MAX_NM = 9.0
 AGA_SAMPLE_SHOT_COUNT = 12      # AGAサンプルShot数
 
+# CanonのSEPA/SAME補正はShotごとの線形補正値。Wafer基準値に
+# Shot位置依存の滑らかな変化を加えて、Shotごとの値を作る
+SHOT_CORR_SPATIAL_AMP = 0.3     # 倍率・回転成分の位置依存振幅（ppm / µrad）
+SHOT_SHIFT_SPATIAL_AMP_NM = 2.0  # シフト成分の位置依存振幅（nm）
+SHOT_CORR_WAVELENGTH_X_MM = 47.0
+SHOT_CORR_WAVELENGTH_Y_MM = 53.0
+
 # 計測判定（RAW_DATA_STSX/Y）。0の割合とX/Y判定が食い違う割合
 # （0/1の意味は未確定。issues.md I-002参照。分布は実データサンプルに合わせた）
 STS_ZERO_RATE = 0.26
@@ -279,6 +286,28 @@ def canon_wafer_params():
     }
 
 
+CANON_SHOT_CORR_KEYS = [
+    "sepa_smagx", "sepa_smagy", "sepa_srotx", "sepa_sroty",
+    "sepa_shiftx", "sepa_shifty",
+    "same_smagx", "same_smagy", "same_srotx", "same_sroty",
+    "same_shiftx", "same_shifty",
+]
+
+
+def canon_shot_corrections(params, shot_x_mm, shot_y_mm):
+    """Shotごとの線形補正値を作る（Wafer基準値 + Shot位置依存の変化）。"""
+    values = {}
+    for index, key in enumerate(CANON_SHOT_CORR_KEYS):
+        amp = (SHOT_SHIFT_SPATIAL_AMP_NM if "shift" in key
+               else SHOT_CORR_SPATIAL_AMP)
+        phase = index * 0.7  # 成分ごとに位相をずらして同じ模様を避ける
+        spatial = (amp * math.sin(shot_x_mm / SHOT_CORR_WAVELENGTH_X_MM + phase)
+                   + amp * 0.5 * math.cos(shot_y_mm / SHOT_CORR_WAVELENGTH_Y_MM + phase))
+        digits = 2 if "shift" in key else 4
+        values[key] = round(params[key] + spatial, digits)
+    return values
+
+
 def canon_residual_nm(params, pos_x_mm, pos_y_mm):
     """計測点位置での残差(nm)を線形モデル + ノイズで作る。
 
@@ -317,6 +346,7 @@ def generate_canon_rows(layouts_by_operation, lot_plans):
             )
 
             for shot_no, shot_x_mm, shot_y_mm in shots:
+                corr = canon_shot_corrections(params, shot_x_mm, shot_y_mm)
                 for mark_no, mark_x_mm, mark_y_mm in mark_offsets:
                     pos_x_mm = shot_x_mm + mark_x_mm
                     pos_y_mm = shot_y_mm + mark_y_mm
@@ -348,18 +378,12 @@ def generate_canon_rows(layouts_by_operation, lot_plans):
                         round(params["pso_tx"], 4), round(params["pso_ty"], 4),
                         round(params["pso_sx"], 2), round(params["pso_sy"], 2),
                         round(params["pso_3sx"], 2), round(params["pso_3sy"], 2),
-                        round(params["sepa_smagx"], 4),
-                        round(params["sepa_smagy"], 4),
-                        round(params["sepa_srotx"], 4),
-                        round(params["sepa_sroty"], 4),
-                        round(params["sepa_shiftx"], 2),
-                        round(params["sepa_shifty"], 2),
-                        round(params["same_smagx"], 4),
-                        round(params["same_smagy"], 4),
-                        round(params["same_srotx"], 4),
-                        round(params["same_sroty"], 4),
-                        round(params["same_shiftx"], 2),
-                        round(params["same_shifty"], 2),
+                        corr["sepa_smagx"], corr["sepa_smagy"],
+                        corr["sepa_srotx"], corr["sepa_sroty"],
+                        corr["sepa_shiftx"], corr["sepa_shifty"],
+                        corr["same_smagx"], corr["same_smagy"],
+                        corr["same_srotx"], corr["same_sroty"],
+                        corr["same_shiftx"], corr["same_shifty"],
                         round(raw_x, 2), round(raw_y, 2),
                         sts_x, sts_y,
                         st_time,
