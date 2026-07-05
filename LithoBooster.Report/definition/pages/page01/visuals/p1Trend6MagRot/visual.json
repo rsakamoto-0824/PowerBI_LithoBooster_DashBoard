@@ -1,0 +1,119 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p1Trend6MagRot",
+  "position": {
+    "x": 533,
+    "y": 200,
+    "z": 14,
+    "width": 327,
+    "height": 261
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "日付"
+                    }
+                  },
+                  "Property": "Date"
+                }
+              },
+              "queryRef": "日付.Date",
+              "nativeQueryRef": "Date"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "AGA MX 平均"
+                }
+              },
+              "queryRef": "CANON.AGA MX 平均",
+              "nativeQueryRef": "AGA MX 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "AGA MY 平均"
+                }
+              },
+              "queryRef": "CANON.AGA MY 平均",
+              "nativeQueryRef": "AGA MY 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "AGA TX 平均"
+                }
+              },
+              "queryRef": "CANON.AGA TX 平均",
+              "nativeQueryRef": "AGA TX 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "AGA TY 平均"
+                }
+              },
+              "queryRef": "CANON.AGA TY 平均",
+              "nativeQueryRef": "AGA TY 平均"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'V-06｜低次補正成分トレンド 倍率 MX/MY・回転 TX/TY（ppm・µrad）'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

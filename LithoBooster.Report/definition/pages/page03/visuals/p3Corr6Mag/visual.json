@@ -1,0 +1,119 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p3Corr6Mag",
+  "position": {
+    "x": 499,
+    "y": 403,
+    "z": 14,
+    "width": 240,
+    "height": 274
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "SHOTINFO_SHOTNO"
+                }
+              },
+              "queryRef": "CANON.SHOTINFO_SHOTNO",
+              "nativeQueryRef": "SHOTINFO_SHOTNO"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "SEPA SMAGX 平均"
+                }
+              },
+              "queryRef": "CANON.SEPA SMAGX 平均",
+              "nativeQueryRef": "SEPA SMAGX 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "SEPA SMAGY 平均"
+                }
+              },
+              "queryRef": "CANON.SEPA SMAGY 平均",
+              "nativeQueryRef": "SEPA SMAGY 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "SAME SMAGX 平均"
+                }
+              },
+              "queryRef": "CANON.SAME SMAGX 平均",
+              "nativeQueryRef": "SAME SMAGX 平均"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "SAME SMAGY 平均"
+                }
+              },
+              "queryRef": "CANON.SAME SMAGY 平均",
+              "nativeQueryRef": "SAME SMAGY 平均"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'V-03｜Shot別補正値 SMAG X/Y（SEPA / SAME）'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -82,17 +82,50 @@ in
 | 判定0率X | CANON | V-04（0/1の意味はI-002確認後にラベル確定） |
 | 補正量X/Y 平均・3σ・平均±3σ 表示 | NIKON | P4 KPIカード |
 | Wafer数 N / Lot数 N / 補正点数 | NIKON | KPI |
+| AGA SX/SY/MX/MY/TX/TY 平均 | CANON | P1 低次補正成分トレンド（V-06） |
+| SEPA/SAME SMAG・SROT・SHIFTのX/Y 平均（12本） | CANON | P3 Shot別補正値（V-03） |
+| OFSETX/Y・SCALX/Y・ROTX/Y 平均 | NIKON | P4 トレンド（V-06） |
+| OFSETX/Y・SCALX/Y・ROTX/Y 平均±3σ 表示（6本） | NIKON | P4 KPIカード（X/Y別） |
+| SHOT OFSET/SCAL/ROTのX/Y 平均・SHOTFAC02〜06のX/Y 平均 | NIKON | P6 Shot補正成分バー（V-28） |
 
 今後の追加予定: 共分散楕円用の位置ごとVx/Vy/Cxy（V-22/V-23）、
 移動平均・前期間比較（V-08）、しきい値超過フラグ（V-07）。
 
 ## 3. レポート設計
 
-- ページはP1〜P7（要件4.2と同じ構成）。雛形では空ページのみ作成済み
-- レイアウトは `dashboard_mockup.pptx` を正とする
+- ページはP1〜P7（要件4.2と同じ構成）。レイアウトは `dashboard_mockup.pptx` を正とし、
+  モックの配置を1280×720pxのページ座標に写像して実装済み
 - テーマは `themes/theme.json` をDesktopの「テーマの参照」から適用する
-- ビジュアル実装の順序（推奨）: P1/P4（標準ビジュアルのみ）→ P2/P3 →
-  P5/P6/P7（Deneb中心）
+
+### 3.1 実装状態（ビジュアル）
+
+各ページ共通: 左レールにスライサー8本
+（期間=日付[Date]の範囲指定、DEVICE_TYPE、OPERATION、EQPID=装置、
+LOT_ID、WAFER_ID、PROCESS、PRODUCT。ファクト列はページの対象ビュー側を使用）。
+
+| ページ | 標準ビジュアル（実装済み） | Denebプレースホルダー |
+|---|---|---|
+| P1 | KPIカード4（計測値X/Y±3σ・判定0率・Wafer数）、V-06トレンド2面（シフト／倍率+回転）、V-30計測値トレンド、V-09マトリックス、V-04判定比率バー | V-01箱ひげ |
+| P2 | — | V-12平均ベクトル場（装置×OPERATION小マルチ） |
+| P3 | V-03 Shot別補正値3面（SMAG/SROT/SHIFT、SEPA+SAMEの4系列） | V-11/V-25/V-27/V-22/V-26 |
+| P4 | KPIカード6（成分X/Y別±3σ）、V-06トレンド3面（OFSET/SCAL/ROT）、V-09マトリックス | V-02箱ひげ |
+| P5 | — | V-18補正前Shot配列（小マルチ） |
+| P6 | V-28 Shot補正成分バー（線形6+SHOTFAC10） | V-14/V-18 |
+| P7 | — | V-19/V-23/V-21/V-29 |
+
+補足:
+
+- V-06の6成分小マルチは、単位が混在するため標準折れ線を
+  単位グループごとに分割して実装した（P1: nm系とppm/µrad系の2面、P4: 3面）
+- V-09のマトリックス色スケール（条件付き書式）はDesktop側で設定する
+- Denebプレースホルダーはテキストボックスで位置を確保しており、
+  記載の手順（Deneb挿入 → フィールド設定 → `deneb/*.json` 貼り付け）で置き換える
+
+### 3.2 ビジュアル数の目安（8個以下）について
+
+P1/P4はモックアップ準拠でカード含め9〜10個になっている。
+カード・スライサーはクエリ負荷が小さいため当面許容し、
+ページロード3秒を超える場合はカードの統合・トレンドの集約で削減する。
 
 ## 4. Deneb設計
 
@@ -104,7 +137,8 @@ in
 | 共分散楕円 V-22/V-23 | 不可 | Deneb採用 |
 | 補正前Shot配列 V-26/V-18 | 不可 | Deneb採用 |
 | Shot枠つきヒートマップ V-25/V-27 | 標準散布図では枠不可 | Deneb採用 |
-| トレンド・箱ひげ・バー・カード | 可能 | 標準ビジュアル |
+| 箱ひげ図 V-01/V-02/V-21/V-29 | 不可（標準に箱ひげ図がないため） | Deneb採用 |
+| トレンド・バー・マトリックス・カード | 可能 | 標準ビジュアル |
 
 - DenebはAppSourceの**認定版**を使用する
 - 定義は `deneb/*.json` を正とし、修正時はDenebエディタへ貼り付けて反映する
@@ -116,6 +150,7 @@ in
 | [v11_vector_map.json](deneb/v11_vector_map.json) | V-11計測値ベクトル（V-12はfacet追加で流用） | 雛形。フィールド名の対応をDeneb側で設定 |
 | [v22_covariance_ellipse.json](deneb/v22_covariance_ellipse.json) | V-22/V-23共分散楕円 | 雛形。Vx/Vy/CxyはDAXメジャーで供給 |
 | [v26_shot_array.json](deneb/v26_shot_array.json) | V-26/V-18補正前Shot配列 | 雛形。逆算式の符号はI-009確認後に確定 |
+| [v29_boxplot.json](deneb/v29_boxplot.json) | V-01/V-02/V-21/V-29箱ひげ図 | 雛形。categoryと値X/Yを割り当てて流用 |
 
 実装時の注意:
 

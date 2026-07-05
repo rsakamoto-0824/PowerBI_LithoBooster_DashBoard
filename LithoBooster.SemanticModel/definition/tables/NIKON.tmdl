@@ -34,6 +34,112 @@ table NIKON
 	measure '補正点数' = COUNTROWS ( 'NIKON' )
 		formatString: #,0
 
+	/// Wafer低次補正成分トレンド用（V-06）。単位は想定（I-002確認中）
+	measure 'OFSETX 平均' = AVERAGE ( 'NIKON'[WAFER_OFSETX] )
+		formatString: 0.00
+
+	measure 'OFSETY 平均' = AVERAGE ( 'NIKON'[WAFER_OFSETY] )
+		formatString: 0.00
+
+	measure 'SCALX 平均' = AVERAGE ( 'NIKON'[WAFER_SCALX] )
+		formatString: 0.00
+
+	measure 'SCALY 平均' = AVERAGE ( 'NIKON'[WAFER_SCALY] )
+		formatString: 0.00
+
+	measure 'ROTX 平均' = AVERAGE ( 'NIKON'[WAFER_ROTX] )
+		formatString: 0.00
+
+	measure 'ROTY 平均' = AVERAGE ( 'NIKON'[WAFER_ROTY] )
+		formatString: 0.00
+
+	/// P4 KPIカード用（成分ごとにX/Y別。単位は想定: nm / ppm / µrad → I-002）
+	measure 'OFSETX 平均±3σ 表示' =
+			VAR AvgV = AVERAGE ( 'NIKON'[WAFER_OFSETX] )
+			VAR Sigma3 = 3 * STDEV.P ( 'NIKON'[WAFER_OFSETX] )
+			RETURN
+				FORMAT ( AvgV, "0.0" ) & " ± " & FORMAT ( Sigma3, "0.0" ) & " nm"
+
+	measure 'OFSETY 平均±3σ 表示' =
+			VAR AvgV = AVERAGE ( 'NIKON'[WAFER_OFSETY] )
+			VAR Sigma3 = 3 * STDEV.P ( 'NIKON'[WAFER_OFSETY] )
+			RETURN
+				FORMAT ( AvgV, "0.0" ) & " ± " & FORMAT ( Sigma3, "0.0" ) & " nm"
+
+	measure 'SCALX 平均±3σ 表示' =
+			VAR AvgV = AVERAGE ( 'NIKON'[WAFER_SCALX] )
+			VAR Sigma3 = 3 * STDEV.P ( 'NIKON'[WAFER_SCALX] )
+			RETURN
+				FORMAT ( AvgV, "0.00" ) & " ± " & FORMAT ( Sigma3, "0.00" ) & " ppm"
+
+	measure 'SCALY 平均±3σ 表示' =
+			VAR AvgV = AVERAGE ( 'NIKON'[WAFER_SCALY] )
+			VAR Sigma3 = 3 * STDEV.P ( 'NIKON'[WAFER_SCALY] )
+			RETURN
+				FORMAT ( AvgV, "0.00" ) & " ± " & FORMAT ( Sigma3, "0.00" ) & " ppm"
+
+	measure 'ROTX 平均±3σ 表示' =
+			VAR AvgV = AVERAGE ( 'NIKON'[WAFER_ROTX] )
+			VAR Sigma3 = 3 * STDEV.P ( 'NIKON'[WAFER_ROTX] )
+			RETURN
+				FORMAT ( AvgV, "0.00" ) & " ± " & FORMAT ( Sigma3, "0.00" ) & " µrad"
+
+	measure 'ROTY 平均±3σ 表示' =
+			VAR AvgV = AVERAGE ( 'NIKON'[WAFER_ROTY] )
+			VAR Sigma3 = 3 * STDEV.P ( 'NIKON'[WAFER_ROTY] )
+			RETURN
+				FORMAT ( AvgV, "0.00" ) & " ± " & FORMAT ( Sigma3, "0.00" ) & " µrad"
+
+	/// V-28 Shot補正成分の棒グラフ用（線形）
+	measure 'SHOT OFSETX 平均' = AVERAGE ( 'NIKON'[SHOT_OFSETX] )
+		formatString: 0.00
+
+	measure 'SHOT OFSETY 平均' = AVERAGE ( 'NIKON'[SHOT_OFSETY] )
+		formatString: 0.00
+
+	measure 'SHOT SCALX 平均' = AVERAGE ( 'NIKON'[SHOT_SCALX] )
+		formatString: 0.00
+
+	measure 'SHOT SCALY 平均' = AVERAGE ( 'NIKON'[SHOT_SCALY] )
+		formatString: 0.00
+
+	measure 'SHOT ROTX 平均' = AVERAGE ( 'NIKON'[SHOT_ROTX] )
+		formatString: 0.00
+
+	measure 'SHOT ROTY 平均' = AVERAGE ( 'NIKON'[SHOT_ROTY] )
+		formatString: 0.00
+
+	/// V-28 Shot補正成分の棒グラフ用（高次。次数対応はI-002確認中）
+	measure 'SHOTFAC02X 平均' = AVERAGE ( 'NIKON'[SHOTFAC02X] )
+		formatString: 0.00
+
+	measure 'SHOTFAC03X 平均' = AVERAGE ( 'NIKON'[SHOTFAC03X] )
+		formatString: 0.00
+
+	measure 'SHOTFAC04X 平均' = AVERAGE ( 'NIKON'[SHOTFAC04X] )
+		formatString: 0.00
+
+	measure 'SHOTFAC05X 平均' = AVERAGE ( 'NIKON'[SHOTFAC05X] )
+		formatString: 0.00
+
+	measure 'SHOTFAC06X 平均' = AVERAGE ( 'NIKON'[SHOTFAC06X] )
+		formatString: 0.00
+
+	measure 'SHOTFAC02Y 平均' = AVERAGE ( 'NIKON'[SHOTFAC02Y] )
+		formatString: 0.00
+
+	measure 'SHOTFAC03Y 平均' = AVERAGE ( 'NIKON'[SHOTFAC03Y] )
+		formatString: 0.00
+
+	measure 'SHOTFAC04Y 平均' = AVERAGE ( 'NIKON'[SHOTFAC04Y] )
+		formatString: 0.00
+
+	measure 'SHOTFAC05Y 平均' = AVERAGE ( 'NIKON'[SHOTFAC05Y] )
+		formatString: 0.00
+
+	measure 'SHOTFAC06Y 平均' = AVERAGE ( 'NIKON'[SHOTFAC06Y] )
+		formatString: 0.00
+
 	column TEC_KIND
 		dataType: string
 		summarizeBy: none

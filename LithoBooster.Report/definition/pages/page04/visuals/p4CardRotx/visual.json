@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p4CardRotx",
+  "position": {
+    "x": 902,
+    "y": 100,
+    "z": 13,
+    "width": 167,
+    "height": 84
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "ROTX 平均±3σ 表示"
+                }
+              },
+              "queryRef": "NIKON.ROTX 平均±3σ 表示",
+              "nativeQueryRef": "ROTX 平均±3σ 表示"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
