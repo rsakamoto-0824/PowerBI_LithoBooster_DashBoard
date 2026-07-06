@@ -47,6 +47,11 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "syncGroup": {
+      "groupName": "DEVICE_TYPE_Canon",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
   }
 }

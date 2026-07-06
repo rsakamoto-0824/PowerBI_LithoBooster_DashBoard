@@ -47,6 +47,11 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "syncGroup": {
+      "groupName": "WAFER_ID_Nikon",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
   }
 }

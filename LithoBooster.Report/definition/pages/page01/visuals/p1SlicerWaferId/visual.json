@@ -47,6 +47,11 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "syncGroup": {
+      "groupName": "WAFER_ID_Canon",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
   }
 }

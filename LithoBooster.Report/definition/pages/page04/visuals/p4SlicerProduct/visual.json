@@ -47,6 +47,11 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "syncGroup": {
+      "groupName": "PRODUCT_Nikon",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
   }
 }

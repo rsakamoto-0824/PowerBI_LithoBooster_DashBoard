@@ -47,6 +47,11 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "syncGroup": {
+      "groupName": "PROCESS_Nikon",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
   }
 }
