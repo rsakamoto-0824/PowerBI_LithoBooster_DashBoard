@@ -1,0 +1,56 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p1SlicerCompareAxis",
+  "position": {
+    "x": 8,
+    "y": 632,
+    "z": 90,
+    "width": 184,
+    "height": 62
+  },
+  "visual": {
+    "visualType": "slicer",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "比較軸"
+                    }
+                  },
+                  "Property": "比較軸"
+                }
+              },
+              "queryRef": "比較軸.比較軸",
+              "nativeQueryRef": "比較軸"
+            }
+          ]
+        }
+      }
+    },
+    "objects": {
+      "data": [
+        {
+          "properties": {
+            "mode": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "syncGroup": {
+      "groupName": "比較軸",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
+  }
+}

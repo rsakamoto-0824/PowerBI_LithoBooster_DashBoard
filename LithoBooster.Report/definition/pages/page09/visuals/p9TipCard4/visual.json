@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p9TipCard4",
+  "position": {
+    "x": 162,
+    "y": 86,
+    "z": 3,
+    "width": 150,
+    "height": 72
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "補正量X 平均±3σ 表示"
+                }
+              },
+              "queryRef": "NIKON.補正量X 平均±3σ 表示",
+              "nativeQueryRef": "補正量X 平均±3σ 表示"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.1.0/schema.json",
+  "name": "p11Table",
+  "position": {
+    "x": 8,
+    "y": 104,
+    "z": 3,
+    "width": 1264,
+    "height": 608
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "p11TopN",
+        "type": "VisualTopN",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "NIKON",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "VisualTopN": {
+                  "ItemCount": 1000
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "MEASUREMENT_TIME"
+                }
+              },
+              "queryRef": "NIKON.MEASUREMENT_TIME",
+              "nativeQueryRef": "MEASUREMENT_TIME"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "LOT_ID"
+                }
+              },
+              "queryRef": "NIKON.LOT_ID",
+              "nativeQueryRef": "LOT_ID"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "WAFER_ID"
+                }
+              },
+              "queryRef": "NIKON.WAFER_ID",
+              "nativeQueryRef": "WAFER_ID"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "EQPID"
+                }
+              },
+              "queryRef": "NIKON.EQPID",
+              "nativeQueryRef": "EQPID"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "OPERATION"
+                }
+              },
+              "queryRef": "NIKON.OPERATION",
+              "nativeQueryRef": "OPERATION"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "PROCESS"
+                }
+              },
+              "queryRef": "NIKON.PROCESS",
+              "nativeQueryRef": "PROCESS"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "CORRDATA_ID"
+                }
+              },
+              "queryRef": "NIKON.CORRDATA_ID",
+              "nativeQueryRef": "CORRDATA_ID"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "CORRDATA_POSX"
+                }
+              },
+              "queryRef": "NIKON.CORRDATA_POSX",
+              "nativeQueryRef": "CORRDATA_POSX"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "CORRDATA_POSY"
+                }
+              },
+              "queryRef": "NIKON.CORRDATA_POSY",
+              "nativeQueryRef": "CORRDATA_POSY"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "CORRDATA_OFSETX"
+                }
+              },
+              "queryRef": "NIKON.CORRDATA_OFSETX",
+              "nativeQueryRef": "CORRDATA_OFSETX"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "CORRDATA_OFSETY"
+                }
+              },
+              "queryRef": "NIKON.CORRDATA_OFSETY",
+              "nativeQueryRef": "CORRDATA_OFSETY"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'生データ明細（Nikon）'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

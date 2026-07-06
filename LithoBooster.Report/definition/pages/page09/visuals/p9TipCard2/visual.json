@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p9TipCard2",
+  "position": {
+    "x": 162,
+    "y": 8,
+    "z": 1,
+    "width": 150,
+    "height": 72
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "Wafer数 N"
+                }
+              },
+              "queryRef": "NIKON.Wafer数 N",
+              "nativeQueryRef": "Wafer数 N"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

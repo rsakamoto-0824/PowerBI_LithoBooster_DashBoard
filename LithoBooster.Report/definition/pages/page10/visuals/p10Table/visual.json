@@ -1,0 +1,240 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.1.0/schema.json",
+  "name": "p10Table",
+  "position": {
+    "x": 8,
+    "y": 104,
+    "z": 3,
+    "width": 1264,
+    "height": 608
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "p10TopN",
+        "type": "VisualTopN",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "t",
+              "Entity": "CANON",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "VisualTopN": {
+                  "ItemCount": 1000
+                }
+              }
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "MEASUREMENT_TIME"
+                }
+              },
+              "queryRef": "CANON.MEASUREMENT_TIME",
+              "nativeQueryRef": "MEASUREMENT_TIME"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "LOT_ID"
+                }
+              },
+              "queryRef": "CANON.LOT_ID",
+              "nativeQueryRef": "LOT_ID"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "WAFER_ID"
+                }
+              },
+              "queryRef": "CANON.WAFER_ID",
+              "nativeQueryRef": "WAFER_ID"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "EQPID"
+                }
+              },
+              "queryRef": "CANON.EQPID",
+              "nativeQueryRef": "EQPID"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "OPERATION"
+                }
+              },
+              "queryRef": "CANON.OPERATION",
+              "nativeQueryRef": "OPERATION"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "PROCESS"
+                }
+              },
+              "queryRef": "CANON.PROCESS",
+              "nativeQueryRef": "PROCESS"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "SHOTINFO_SHOTNO"
+                }
+              },
+              "queryRef": "CANON.SHOTINFO_SHOTNO",
+              "nativeQueryRef": "SHOTINFO_SHOTNO"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "MARKINFO_MARKNO"
+                }
+              },
+              "queryRef": "CANON.MARKINFO_MARKNO",
+              "nativeQueryRef": "MARKINFO_MARKNO"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "RAW_DATA_X"
+                }
+              },
+              "queryRef": "CANON.RAW_DATA_X",
+              "nativeQueryRef": "RAW_DATA_X"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "RAW_DATA_Y"
+                }
+              },
+              "queryRef": "CANON.RAW_DATA_Y",
+              "nativeQueryRef": "RAW_DATA_Y"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "RAW_DATA_STSX"
+                }
+              },
+              "queryRef": "CANON.RAW_DATA_STSX",
+              "nativeQueryRef": "RAW_DATA_STSX"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "RAW_DATA_STSY"
+                }
+              },
+              "queryRef": "CANON.RAW_DATA_STSY",
+              "nativeQueryRef": "RAW_DATA_STSY"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'生データ明細（Canon）'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

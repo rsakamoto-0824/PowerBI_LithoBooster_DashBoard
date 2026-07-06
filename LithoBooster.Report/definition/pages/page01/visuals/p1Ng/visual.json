@@ -19,14 +19,15 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "装置"
+                      "Entity": "比較軸"
                     }
                   },
-                  "Property": "EQPID"
+                  "Property": "比較軸のフィールド"
                 }
               },
-              "queryRef": "装置.EQPID",
-              "nativeQueryRef": "EQPID"
+              "queryRef": "比較軸.比較軸のフィールド",
+              "nativeQueryRef": "比較軸のフィールド",
+              "active": true
             }
           ]
         },
@@ -82,7 +83,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'V-04｜計測判定の比率（判定X）'"
+                  "Value": "'V-04｜計測判定の比率（判定X、比較軸別）'"
                 }
               }
             }
