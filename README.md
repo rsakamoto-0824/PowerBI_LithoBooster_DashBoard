@@ -12,6 +12,7 @@ DirectQueryで接続する。
 - ビュー定義: [sys_emas.md](sys_emas.md)
 - 課題: [issues.md](issues.md)
 - 画面イメージ: `dashboard_mockup.pptx`
+- 改善提案: [improvement_report.html](improvement_report.html)（ブラウザで開く）
 
 ## 実行方法
 
