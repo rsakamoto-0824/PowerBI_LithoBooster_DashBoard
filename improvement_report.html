@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LithoBoosterダッシュボード 改善提案レポート</title>
+<style>
+  /* ---- 定数（配色・サイズはここにまとめる） ---- */
+  :root {
+    --color-navy: #1E2761;
+    --color-accent: #F96167;
+    --color-bg: #F5F6FA;
+    --color-panel: #FFFFFF;
+    --color-border: #D8DBE6;
+    --color-text: #222633;
+    --color-muted: #6B7085;
+    --toc-width-px: 260px;
+    --content-max-width-px: 860px;
+    --priority-high: #C0392B;
+    --priority-mid: #B9770E;
+    --priority-low: #1E8449;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: "Yu Gothic UI", "Hiragino Sans", "Meiryo", sans-serif;
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.7;
+  }
+
+  /* ---- 左パネル（目次） ---- */
+  nav#toc {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: var(--toc-width-px);
+    height: 100vh;
+    overflow-y: auto;
+    background: var(--color-navy);
+    color: #fff;
+    padding: 20px 16px;
+  }
+  nav#toc h2 { font-size: 15px; margin: 0 0 12px; border-bottom: 1px solid rgba(255,255,255,.3); padding-bottom: 8px; }
+  nav#toc ol { list-style: none; margin: 0; padding: 0; }
+  nav#toc li { margin: 6px 0; }
+  nav#toc a { color: #DDE1F0; text-decoration: none; font-size: 13px; display: block; padding: 4px 6px; border-radius: 4px; }
+  nav#toc a:hover { background: rgba(255,255,255,.15); color: #fff; }
+  nav#toc .toc-sub { padding-left: 14px; }
+  nav#toc .toc-sub a { font-size: 12px; color: #B9BFD9; }
+
+  /* ---- 本文 ---- */
+  main {
+    margin-left: var(--toc-width-px);
+    padding: 32px 24px 96px;
+  }
+  .container { max-width: var(--content-max-width-px); margin: 0 auto; }
+
+  header.report-header {
+    background: var(--color-navy);
+    color: #fff;
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+  }
+  header.report-header h1 { margin: 0 0 6px; font-size: 22px; }
+  header.report-header p { margin: 0; color: #C9CEE4; font-size: 13px; }
+
+  section { background: var(--color-panel); border: 1px solid var(--color-border); border-radius: 10px; padding: 20px 24px; margin-bottom: 24px; }
+  section h2 { font-size: 18px; color: var(--color-navy); border-left: 5px solid var(--color-accent); padding-left: 10px; margin-top: 4px; }
+  section h3 { font-size: 15px; color: var(--color-navy); margin-bottom: 4px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: 13px; margin: 12px 0; }
+  th, td { border: 1px solid var(--color-border); padding: 7px 10px; text-align: left; vertical-align: top; }
+  th { background: #EEF0F7; color: var(--color-navy); white-space: nowrap; }
+  tr:nth-child(even) td { background: #FAFBFE; }
+
+  .badge { display: inline-block; padding: 1px 10px; border-radius: 10px; color: #fff; font-size: 11px; font-weight: bold; margin-left: 8px; vertical-align: middle; }
+  .p-high { background: var(--priority-high); }
+  .p-mid  { background: var(--priority-mid); }
+  .p-low  { background: var(--priority-low); }
+
+  article.item { border-top: 1px dashed var(--color-border); padding-top: 14px; margin-top: 14px; }
+  article.item:first-of-type { border-top: none; margin-top: 0; }
+  .item dl { margin: 6px 0 0; font-size: 13.5px; }
+  .item dt { font-weight: bold; color: var(--color-muted); margin-top: 6px; }
+  .item dd { margin: 0 0 2px 1em; }
+  .meta { font-size: 12px; color: var(--color-muted); }
+  code { background: #EEF0F7; padding: 1px 5px; border-radius: 4px; font-size: 12px; }
+
+  /* ---- トップへ戻るボタン ---- */
+  a#back-to-top {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--color-accent);
+    color: #fff;
+    text-align: center;
+    line-height: 48px;
+    font-size: 20px;
+    text-decoration: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    z-index: 100;
+  }
+  a#back-to-top:hover { opacity: .85; }
+
+  html { scroll-behavior: smooth; }
+
+  /* ---- 狭い画面: 目次を上部の開閉式にして本文を邪魔しない ---- */
+  @media (max-width: 900px) {
+    nav#toc {
+      position: static;
+      width: 100%;
+      height: auto;
+      padding: 12px 16px;
+    }
+    nav#toc ol { display: none; }
+    nav#toc.open ol { display: block; }
+    nav#toc h2 { cursor: pointer; margin-bottom: 0; border-bottom: none; }
+    nav#toc h2::after { content: "　▾ タップで開閉"; font-size: 11px; color: #B9BFD9; }
+    main { margin-left: 0; padding: 16px 12px 96px; }
+    a#back-to-top { width: 42px; height: 42px; line-height: 42px; right: 12px; bottom: 12px; }
+  }
+</style>
+</head>
+<body id="top">
+
+<nav id="toc">
+  <h2 onclick="this.parentElement.classList.toggle('open')">目次</h2>
+  <ol>
+    <li><a href="#sec1">1. このレポートについて</a></li>
+    <li><a href="#sec2">2. 現状整理（できていること）</a></li>
+    <li><a href="#sec3">3. 提案一覧（優先度つき）</a></li>
+    <li><a href="#sec4">4. 優先度: 高</a>
+      <div class="toc-sub">
+        <a href="#k01">K-01 Windows再検証とDeneb置換</a>
+        <a href="#k02">K-02 エンジニア確認の完了</a>
+        <a href="#k03">K-03 期間の既定値と負荷ガード</a>
+        <a href="#k04">K-04 スライサー同期</a>
+        <a href="#k05">K-05 ドリルスルー設定</a>
+      </div>
+    </li>
+    <li><a href="#sec5">5. 優先度: 中</a>
+      <div class="toc-sub">
+        <a href="#k06">K-06 ディメンション化</a>
+        <a href="#k07">K-07 日付テーブルの動的化</a>
+        <a href="#k08">K-08 重複データ平均の方式確定</a>
+        <a href="#k09">K-09 判定Y成分の追加</a>
+        <a href="#k10">K-10 スキーマ検証のCI化</a>
+        <a href="#k11">K-11 ツールチップ/明細ページ</a>
+        <a href="#k12">K-12 比較軸の切替</a>
+      </div>
+    </li>
+    <li><a href="#sec6">6. 優先度: 低</a>
+      <div class="toc-sub">
+        <a href="#k13">K-13 サンプルCSVの軽量化</a>
+        <a href="#k14">K-14 テーマの組み込み</a>
+        <a href="#k15">K-15 Deneb速度実測</a>
+        <a href="#k16">K-16 schedule.json作成</a>
+      </div>
+    </li>
+    <li><a href="#sec7">7. 推奨する進め方</a></li>
+  </ol>
+</nav>
+
+<main>
+<div class="container">
+
+<header class="report-header">
+  <h1>LithoBoosterダッシュボード 改善提案レポート</h1>
+  <p>対象: PowerBI_LithoBooster_DashBoard リポジトリ（PR #6 マージ時点）｜作成日: 2026/07/06</p>
+</header>
+
+<section id="sec1">
+  <h2>1. このレポートについて</h2>
+  <p>
+    アライメント計測・Shot補正可視化ダッシュボードの開発は、要件定義 → 画面モックアップ →
+    PBIPプロジェクト実装（P1〜P7のビジュアル配置）まで進みました。
+    本レポートは、この時点のリポジトリを見直して「次にやると効果が大きい改善」を
+    優先度（高・中・低）と工数目安（小: 半日以内 / 中: 1〜2日 / 大: 3日以上）つきで整理したものです。
+  </p>
+  <p class="meta">
+    ※ 課題番号（I-xxx）は <code>issues.md</code> の管理番号、V-xx は <code>requirements.md</code> の可視化項目番号に対応します。
+    提案番号は K-01〜K-16 です。
+  </p>
+</section>
+
+<section id="sec2">
+  <h2>2. 現状整理（できていること）</h2>
+  <table>
+    <tr><th>領域</th><th>状態</th></tr>
+    <tr><td>要件・設計</td><td>requirements.md / design.md / sys_emas.md 整備済み。可視化項目はV-01〜V-30で定義</td></tr>
+    <tr><td>データモデル</td><td>TMDLでCANON/NIKON+日付+装置のスタースキーマ、メジャー約60本</td></tr>
+    <tr><td>レポート</td><td>P1〜P7に108ビジュアル配置済み（標準ビジュアル+Deneb実装枠）</td></tr>
+    <tr><td>Deneb定義</td><td>ベクトル場・共分散楕円・補正前Shot配列・箱ひげの雛形4本</td></tr>
+    <tr><td>サンプルデータ</td><td>実データの命名規則に合わせたダミーCSV（実データなし）</td></tr>
+    <tr><td>ソース管理</td><td>Privateリポジトリ、ブランチ→PR→確認→マージ運用が定着</td></tr>
+    <tr><td>直近の修正</td><td>Desktopで開けない不具合（report.json必須項目欠落など）をPR #6で修正済み。<b>修正後のWindows再検証は未実施</b></td></tr>
+  </table>
+</section>
+
+<section id="sec3">
+  <h2>3. 提案一覧（優先度つき）</h2>
+  <table>
+    <tr><th>番号</th><th>提案</th><th>優先度</th><th>工数目安</th><th>関連</th></tr>
+    <tr><td><a href="#k01">K-01</a></td><td>Windows再検証とDeneb実装枠の置き換え完了</td><td>高</td><td>中</td><td>—</td></tr>
+    <tr><td><a href="#k02">K-02</a></td><td>装置エンジニア確認（接続情報・単位・符号規約）の完了</td><td>高</td><td>小（依頼）</td><td>I-001b/002/009</td></tr>
+    <tr><td><a href="#k03">K-03</a></td><td>期間スライサーの既定値（直近7日）と負荷ガード</td><td>高</td><td>小</td><td>要件4.1</td></tr>
+    <tr><td><a href="#k04">K-04</a></td><td>スライサー同期（7ページ間で選択を共有）</td><td>高</td><td>小</td><td>—</td></tr>
+    <tr><td><a href="#k05">K-05</a></td><td>ドリルスルー設定（P2→P3、P5→P6）</td><td>高</td><td>小</td><td>要件4.2</td></tr>
+    <tr><td><a href="#k06">K-06</a></td><td>PROCESS/PRODUCT/DEVICE_TYPEのディメンション化</td><td>中</td><td>中</td><td>I-007</td></tr>
+    <tr><td><a href="#k07">K-07</a></td><td>日付テーブルの範囲を動的化（現状2026〜2027固定）</td><td>中</td><td>小</td><td>—</td></tr>
+    <tr><td><a href="#k08">K-08</a></td><td>重複データ平均の実現方式を確定</td><td>中</td><td>中</td><td>I-006</td></tr>
+    <tr><td><a href="#k09">K-09</a></td><td>判定0率のY成分追加とV-04の拡張</td><td>中</td><td>小</td><td>I-002</td></tr>
+    <tr><td><a href="#k10">K-10</a></td><td>PBIP定義ファイル検証のCI化（GitHub Actions）</td><td>中</td><td>中</td><td>—</td></tr>
+    <tr><td><a href="#k11">K-11</a></td><td>ツールチップページ・明細ドリルスルーページの追加</td><td>中</td><td>中</td><td>要件4.2</td></tr>
+    <tr><td><a href="#k12">K-12</a></td><td>比較軸（号機/製品/工程）切替の仕組み</td><td>中</td><td>中</td><td>—</td></tr>
+    <tr><td><a href="#k13">K-13</a></td><td>サンプルCSVの軽量化（現状 約24MB）</td><td>低</td><td>小</td><td>—</td></tr>
+    <tr><td><a href="#k14">K-14</a></td><td>テーマをレポートに組み込み（手動適用を不要に）</td><td>低</td><td>小</td><td>—</td></tr>
+    <tr><td><a href="#k15">K-15</a></td><td>Deneb表示速度の実測と行数上限の運用値決定</td><td>低</td><td>小</td><td>要件6.1</td></tr>
+    <tr><td><a href="#k16">K-16</a></td><td>schedule.json（ガントチャート用）の作成</td><td>低</td><td>小</td><td>—</td></tr>
+  </table>
+  <p class="meta">※ RLS（行レベルセキュリティ）の要否判断（I-004）は「Power BI Serviceへ公開する前」が期限のため、公開時期が決まり次第 優先度: 高 に繰り上げてください。</p>
+</section>
+
+<section id="sec4">
+  <h2>4. 優先度: 高</h2>
+
+  <article class="item" id="k01">
+    <h3>K-01 Windows再検証とDeneb実装枠の置き換え完了 <span class="badge p-high">高</span></h3>
+    <p class="meta">工数目安: 中（Deneb置き換えを含む）</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>開けない不具合はPR #6で修正しましたが、修正後にWindowsのPower BI Desktopで開けることの確認がまだです。また、ベクトル場・共分散楕円・補正前Shot配列・箱ひげの13枠は「Deneb実装枠」のままで、グラフとして動いていません。</dd>
+      <dt>提案</dt>
+      <dd>①最新mainをWindowsで開き、全ページの表示を確認 → ②枠に書かれた手順どおりDenebビジュアルへ置き換え（P3の計測値ベクトルマップから着手推奨）→ ③置き換え後にDesktopから保存し、差分をPRでレビュー。</dd>
+      <dt>期待効果</dt>
+      <dd>ダッシュボードの中核であるWaferマップ系が実際に動く状態になり、以降の調整（倍率・配色）が実データ確認と並行して進められます。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k02">
+    <h3>K-02 装置エンジニア確認の完了（I-001b / I-002 / I-009） <span class="badge p-high">高</span></h3>
+    <p class="meta">工数目安: 小（確認依頼の実施。回答待ちが主）</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>Vertica接続情報（I-001b）が無いと本番切替ができません。単位・判定0/1の意味（I-002）が未確定のままだと、カードやツールチップの単位表記（nm/ppm/µrad）が想定値のままになります。補正前逆算の符号規約（I-009)が未確定だと、V-18/V-26で<b>補正効果が逆向きに見えるリスク</b>があります。</dd>
+      <dt>提案</dt>
+      <dd>issues.mdの該当3件を「確認依頼票」として1枚にまとめ、装置エンジニアへ送付。回答が届いた項目から sys_emas.md・メジャーの単位表記・deneb定義に反映します。</dd>
+      <dt>期待効果</dt>
+      <dd>実装のブロッカーが解消し、誤読リスク（単位違い・符号逆）を早期に潰せます。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k03">
+    <h3>K-03 期間スライサーの既定値（直近7日）と負荷ガード <span class="badge p-high">高</span></h3>
+    <p class="meta">工数目安: 小</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>要件では「必須フィルター未選択のまま全期間クエリをVerticaへ飛ばさない」としていますが、現状のスライサーには既定値がなく、開いた直後に広い範囲のクエリが発生し得ます。</dd>
+      <dt>提案</dt>
+      <dd>①期間スライサーを「相対日付: 直近7日」を既定に設定 ②各ページに「Wafer数」「測定点数」の件数ガードカードを置き、絞り込み不足を数字で気づけるようにする ③マトリックス系にTop Nフィルターを設定。</dd>
+      <dt>期待効果</dt>
+      <dd>DB負荷と初期表示時間を抑え、ページロード3秒目標に近づけます。DirectQuery本番切替後の事故（全期間スキャン）を防ぎます。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k04">
+    <h3>K-04 スライサー同期 <span class="badge p-high">高</span></h3>
+    <p class="meta">工数目安: 小（Desktop操作のみ）</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>7ページ × 8本のスライサーは現状ページごとに独立しています。P1で選んだ期間や装置がP2以降に引き継がれず、ページを移るたびに選び直しが必要です。</dd>
+      <dt>提案</dt>
+      <dd>Desktopの「スライサーの同期」で、期間・DEVICE_TYPE・OPERATION・EQPID等をページ間同期します（Canon系とNikon系でファクト列が異なるため、同期グループはCanon系/Nikon系/共通の3グループに分けるのが安全です）。</dd>
+      <dt>期待効果</dt>
+      <dd>「俯瞰→詳細」の分析動線が1回の絞り込みで通り、操作ミス（ページごとに条件が違う状態での誤読）を防げます。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k05">
+    <h3>K-05 ドリルスルー設定（P2→P3、P5→P6） <span class="badge p-high">高</span></h3>
+    <p class="meta">工数目安: 小</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>要件の分析動線は「俯瞰ページで気になる装置・Lotを右クリック → 詳細ページへドリルスルー」ですが、ドリルスルーフィールドが未設定です。</dd>
+      <dt>提案</dt>
+      <dd>P3・P6にドリルスルーフィールド（EQPID・LOT_ID・OPERATION）を設定し、P2・P5から遷移できるようにします。あわせて「戻る」ボタンを配置します。</dd>
+      <dt>期待効果</dt>
+      <dd>モックアップで説明していた操作がそのまま使えるようになり、利用者の教育コストが下がります。</dd>
+    </dl>
+  </article>
+</section>
+
+<section id="sec5">
+  <h2>5. 優先度: 中</h2>
+
+  <article class="item" id="k06">
+    <h3>K-06 PROCESS / PRODUCT / DEVICE_TYPE のディメンション化 <span class="badge p-mid">中</span></h3>
+    <p class="meta">工数目安: 中</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>現状これらのスライサーはCanon/Nikonのファクト列を直接使っており、ページによって参照テーブルが異なります。装置（EQPID）だけは統合ディメンションがありますが、他は未対応で、スライサー同期（K-04）とも相性が悪い構成です。</dd>
+      <dt>提案</dt>
+      <dd>装置テーブルと同じ方式（両ビューからDISTINCT取得のPower Queryテーブル）で工程・製品・デバイス種別のディメンションを作り、スライサーをそちらへ差し替えます。DB側にマスタ表があればそれを参照します（I-007）。</dd>
+      <dt>期待効果</dt>
+      <dd>1本のスライサーでCanon/Nikon両方を絞れるようになり、同期設定も単純になります。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k07">
+    <h3>K-07 日付テーブルの範囲を動的化 <span class="badge p-mid">中</span></h3>
+    <p class="meta">工数目安: 小</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>日付テーブルは2026/1/1〜2027/12/31の固定生成です。2028年以降のデータが来るとリレーションから漏れ、<b>グラフから静かにデータが消える</b>恐れがあります。</dd>
+      <dt>提案</dt>
+      <dd>Mクエリを「今日を基準に過去N年〜未来1年」を生成する式へ変更します（例: <code>Date.AddYears(Date.From(DateTime.LocalNow()), -2)</code> 開始）。</dd>
+      <dt>期待効果</dt>
+      <dd>保守作業ゼロで日付切れを防止できます。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k08">
+    <h3>K-08 重複データ平均の実現方式を確定（I-006） <span class="badge p-mid">中</span></h3>
+    <p class="meta">工数目安: 中（方式判断+実装）</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>要件では「同一WaferId・計測日時・Shot座標・Mark座標の重複は平均してから集計」としていますが、現行メジャーは重複をそのまま平均しており、再測定があった場合に統計値がわずかにズレます。</dd>
+      <dt>提案</dt>
+      <dd>優先順位: ①ビュー側で重複排除済みビューを用意してもらう（DirectQueryと最も相性が良い）→ ②難しければSUMMARIZEで2段階集計するDAXメジャーへ変更（負荷は実測必須）。どちらにするかをI-003のデータ量確認とセットで決めます。</dd>
+      <dt>期待効果</dt>
+      <dd>RMSEやばらつき系指標（共分散楕円含む）の正確性が要件どおりになります。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k09">
+    <h3>K-09 判定0率のY成分追加とV-04の拡張 <span class="badge p-mid">中</span></h3>
+    <p class="meta">工数目安: 小</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>判定関連はX成分（RAW_DATA_STSX）のみ実装しており、Y成分（STSY）のカード・比率グラフがありません。</dd>
+      <dt>提案</dt>
+      <dd>「判定0率Y」メジャーを追加し、P1のカードをX/Y並記へ、V-04の積み上げバーもX/Y切替（またはX/Y並置）にします。0/1の意味確定（I-002）後にラベルを正式名称へ変えます。</dd>
+      <dt>期待効果</dt>
+      <dd>X/Y片側だけ判定不良が増えるケース（照明条件・Mark依存など）を見逃さなくなります。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k10">
+    <h3>K-10 PBIP定義ファイル検証のCI化 <span class="badge p-mid">中</span></h3>
+    <p class="meta">工数目安: 中</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>「Desktopで開けない」不具合の原因は、JSONの必須項目欠落とスキーマURL誤りでした。これはMicrosoft公式スキーマとの突き合わせで機械的に検出できることが今回実証済みですが、現在は手元での手動実行です。</dd>
+      <dt>提案</dt>
+      <dd>GitHub Actions（Privateリポジトリ）でPRごとに ①全JSONの構文チェック ②公式スキーマ検証 ③ファイル参照の実在チェック（今回作成したスクリプト相当）を自動実行し、失敗したらマージ不可にします。</dd>
+      <dt>期待効果</dt>
+      <dd>「マージ後にWindowsで開いて初めて壊れていると分かる」手戻りを、PR段階で防げます。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k11">
+    <h3>K-11 ツールチップページ・明細ドリルスルーページ <span class="badge p-mid">中</span></h3>
+    <p class="meta">工数目安: 中</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>要件の補足ページ（マウスオーバーでLot/Wafer基本情報、Top N上限つき生データ明細）が未実装です。</dd>
+      <dt>提案</dt>
+      <dd>ツールチップ用の小型ページ（Lot/Wafer/装置/件数のカード構成）と、明細テーブルページ（Top N 1,000行上限+CSVエクスポート抑止設定）を追加します。</dd>
+      <dt>期待効果</dt>
+      <dd>グラフ上で気になった点の一次情報（どのLot/Waferか）へ即座に到達でき、調査時間を短縮します。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k12">
+    <h3>K-12 比較軸（号機/製品/工程）切替の仕組み <span class="badge p-mid">中</span></h3>
+    <p class="meta">工数目安: 中</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>トレンドの凡例は現状固定です。要件の「号機別・製品別の比較」を1つのグラフで切り替えられると、ビジュアル数を増やさずに分析の幅が広がります（1ページ8個目安の対策にもなります）。</dd>
+      <dt>提案</dt>
+      <dd>フィールドパラメーター（Desktopの標準機能）で凡例を EQPID / PRODUCT / PROCESS から選択式にし、P1/P4のトレンドへ適用します。</dd>
+      <dt>期待効果</dt>
+      <dd>ページを増やさずカテゴリ比較の要件を満たせ、P1/P4のビジュアル過密も緩和できます。</dd>
+    </dl>
+  </article>
+</section>
+
+<section id="sec6">
+  <h2>6. 優先度: 低</h2>
+
+  <article class="item" id="k13">
+    <h3>K-13 サンプルCSVの軽量化 <span class="badge p-low">低</span></h3>
+    <p class="meta">工数目安: 小</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>ダミーCSVが約24MB（CANON 約19MB + NIKON 約4MB）あり、クローンやPR差分表示がやや重くなっています。</dd>
+      <dt>提案</dt>
+      <dd>生成スクリプトにLot数・Wafer数を絞る引数（例: <code>--lots 3</code>）を追加し、リポジトリ同梱版は数MBに縮小。フルサイズは必要時に各自生成する運用にします。</dd>
+      <dt>期待効果</dt>
+      <dd>リポジトリ操作が軽くなり、生成条件の再現もしやすくなります。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k14">
+    <h3>K-14 テーマをレポートに組み込み <span class="badge p-low">低</span></h3>
+    <p class="meta">工数目安: 小</p>
+    <dl>
+      <dt>背景</dt>
+      <dd><code>themes/theme.json</code> は「Desktopで手動適用」の手順になっており、適用忘れで配色が既定のままになる可能性があります。</dd>
+      <dt>提案</dt>
+      <dd>Desktopでテーマ適用後に保存し、レポート定義（RegisteredResources）としてリポジトリへ取り込みます。以後はテーマ変更もPR差分でレビューできます。</dd>
+      <dt>期待効果</dt>
+      <dd>誰が開いても同じ配色・フォントになり、スクリーンショット比較も安定します。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k15">
+    <h3>K-15 Deneb表示速度の実測と行数上限の運用値決定 <span class="badge p-low">低</span></h3>
+    <p class="meta">工数目安: 小（K-01完了後）</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>要件で「カスタムビジュアルは本番投入前に表示速度を実測」とされていますが未実施です。DirectQueryのビジュアル行数上限（既定30,000行）に対し、1Lotの測定点は最大約12,000点です。</dd>
+      <dt>提案</dt>
+      <dd>パフォーマンスアナライザーで、Wafer1枚/1Lot/複数Lotの3条件×各Denebビジュアルの描画時間を計測し、「何枚まで重ねて良いか」の運用値をdesign.mdに記録します。</dd>
+      <dt>期待効果</dt>
+      <dd>ページロード3秒目標の達成可否を数字で判断でき、Aggregations等の追加対策の要否を早期に決められます。</dd>
+    </dl>
+  </article>
+
+  <article class="item" id="k16">
+    <h3>K-16 schedule.json（ガントチャート用）の作成 <span class="badge p-low">低</span></h3>
+    <p class="meta">工数目安: 小</p>
+    <dl>
+      <dt>背景</dt>
+      <dd>標準ファイル構成のうち schedule.json が未作成です。残作業（K-01〜K-15とエンジニア確認の待ち時間）が見える化されていません。</dd>
+      <dt>提案</dt>
+      <dd>指定テンプレートに従い、本レポートの提案を依存関係つきのスケジュールへ落とし込みます（例: K-02の回答 → 単位確定 → Deneb調整、の依存）。</dd>
+      <dt>期待効果</dt>
+      <dd>「いつ何が終わるか」「何が回答待ちで止まっているか」を関係者と共有できます。</dd>
+    </dl>
+  </article>
+</section>
+
+<section id="sec7">
+  <h2>7. 推奨する進め方</h2>
+  <ol>
+    <li><b>今週:</b> K-01（Windows再検証）と K-02（エンジニアへ確認依頼を送付）を並行で開始。開けることを確認したら K-03〜K-05（既定値・同期・ドリルスルー）はDesktop操作のみでまとめて実施できます</li>
+    <li><b>回答待ちの間:</b> K-10（CI化）・K-07（日付動的化）・K-09（判定Y）・K-13（CSV軽量化）など、確認回答に依存しない改善を消化</li>
+    <li><b>回答が揃ったら:</b> 単位・符号をモデルとDeneb定義へ反映 → K-08（重複平均）と K-15（速度実測）→ Vertica DirectQuery切替（design.md 2.3）</li>
+    <li><b>公開前:</b> RLS要否判断（I-004）、K-11（明細ページのTop N上限）、データ更新スケジュールの業務時間外設定を最終確認</li>
+  </ol>
+  <p class="meta">※ どの改善も「ブランチ → PR → 確認 → マージ」の手順で進めます。見た目が変わるものはPRにスクリーンショットを添付します。</p>
+</section>
+
+</div>
+</main>
+
+<a href="#top" id="back-to-top" title="トップへ戻る">▲</a>
+
+</body>
+</html>
