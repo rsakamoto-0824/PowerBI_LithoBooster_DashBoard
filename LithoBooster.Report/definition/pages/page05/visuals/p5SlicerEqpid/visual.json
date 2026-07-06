@@ -47,6 +47,11 @@
         }
       ]
     },
-    "drillFilterOtherVisuals": true
+    "drillFilterOtherVisuals": true,
+    "syncGroup": {
+      "groupName": "装置",
+      "fieldChanges": true,
+      "filterChanges": true
+    }
   }
 }

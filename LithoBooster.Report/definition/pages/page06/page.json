@@ -4,5 +4,102 @@
   "displayName": "P6 詳細分析（Nikon）",
   "displayOption": "FitToPage",
   "height": 720,
-  "width": 1280
+  "width": 1280,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "p6DrillEQPID",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "装置"
+              }
+            },
+            "Property": "EQPID"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "p6DrillLOT_ID",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "NIKON"
+              }
+            },
+            "Property": "LOT_ID"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "p6DrillOPERATION",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "NIKON"
+              }
+            },
+            "Property": "OPERATION"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "p6Drillthrough",
+    "type": "Drillthrough",
+    "parameters": [
+      {
+        "name": "p6ParamEQPID",
+        "boundFilter": "p6DrillEQPID",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "装置"
+              }
+            },
+            "Property": "EQPID"
+          }
+        }
+      },
+      {
+        "name": "p6ParamLOT_ID",
+        "boundFilter": "p6DrillLOT_ID",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "NIKON"
+              }
+            },
+            "Property": "LOT_ID"
+          }
+        }
+      },
+      {
+        "name": "p6ParamOPERATION",
+        "boundFilter": "p6DrillOPERATION",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "NIKON"
+              }
+            },
+            "Property": "OPERATION"
+          }
+        }
+      }
+    ]
+  }
 }
