@@ -19,14 +19,15 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "装置"
+                      "Entity": "比較軸"
                     }
                   },
-                  "Property": "EQPID"
+                  "Property": "比較軸のフィールド"
                 }
               },
-              "queryRef": "装置.EQPID",
-              "nativeQueryRef": "EQPID"
+              "queryRef": "比較軸.比較軸のフィールド",
+              "nativeQueryRef": "比較軸のフィールド",
+              "active": true
             }
           ]
         },
@@ -82,7 +83,7 @@
             "text": {
               "expr": {
                 "Literal": {
-                  "Value": "'V-09｜装置×日付ヒートマップ（計測値X平均）'"
+                  "Value": "'V-09｜比較軸×日付ヒートマップ（計測値X平均）'"
                 }
               }
             }

@@ -1,0 +1,106 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/1.0.0/schema.json",
+  "name": "page11",
+  "displayName": "明細（Nikon）",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280,
+  "visibility": "HiddenInViewMode",
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "p11DrillEQPID",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "装置"
+              }
+            },
+            "Property": "EQPID"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "p11DrillLOT_ID",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "NIKON"
+              }
+            },
+            "Property": "LOT_ID"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      },
+      {
+        "name": "p11DrillOPERATION",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "NIKON"
+              }
+            },
+            "Property": "OPERATION"
+          }
+        },
+        "type": "Categorical",
+        "howCreated": "Drillthrough"
+      }
+    ]
+  },
+  "pageBinding": {
+    "name": "p11Drillthrough",
+    "type": "Drillthrough",
+    "parameters": [
+      {
+        "name": "p11ParamEQPID",
+        "boundFilter": "p11DrillEQPID",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "装置"
+              }
+            },
+            "Property": "EQPID"
+          }
+        }
+      },
+      {
+        "name": "p11ParamLOT_ID",
+        "boundFilter": "p11DrillLOT_ID",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "NIKON"
+              }
+            },
+            "Property": "LOT_ID"
+          }
+        }
+      },
+      {
+        "name": "p11ParamOPERATION",
+        "boundFilter": "p11DrillOPERATION",
+        "fieldExpr": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "NIKON"
+              }
+            },
+            "Property": "OPERATION"
+          }
+        }
+      }
+    ]
+  }
+}

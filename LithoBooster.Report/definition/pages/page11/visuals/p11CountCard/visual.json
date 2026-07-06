@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p11CountCard",
+  "position": {
+    "x": 1100,
+    "y": 8,
+    "z": 2,
+    "width": 172,
+    "height": 88
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "NIKON"
+                    }
+                  },
+                  "Property": "補正点数"
+                }
+              },
+              "queryRef": "NIKON.補正点数",
+              "nativeQueryRef": "補正点数"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

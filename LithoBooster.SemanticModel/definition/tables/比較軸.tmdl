@@ -1,0 +1,37 @@
+table 比較軸
+
+	/// 比較軸切替用のフィールドパラメーター（K-12）。
+	/// マトリックスの行や凡例を 装置 / 製品 / 工程 で切り替える
+	column 比較軸
+		dataType: string
+		sourceColumn: [Value1]
+		sortByColumn: 比較軸の順序
+
+		relatedColumnDetails
+			groupByColumn: 比較軸のフィールド
+
+	column 比較軸のフィールド
+		isHidden
+		dataType: string
+		sourceColumn: [Value2]
+		sortByColumn: 比較軸の順序
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+	column 比較軸の順序
+		isHidden
+		dataType: int64
+		sourceColumn: [Value3]
+
+	partition 比較軸 = calculated
+		mode: import
+		source =
+				{
+				    ("装置", NAMEOF('装置'[EQPID]), 0),
+				    ("製品", NAMEOF('製品'[PRODUCT]), 1),
+				    ("工程", NAMEOF('工程'[PROCESS]), 2)
+				}

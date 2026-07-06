@@ -1,0 +1,37 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/1.0.0/schema.json",
+  "name": "p8TipCard3",
+  "position": {
+    "x": 8,
+    "y": 86,
+    "z": 2,
+    "width": 150,
+    "height": 72
+  },
+  "visual": {
+    "visualType": "card",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "CANON"
+                    }
+                  },
+                  "Property": "測定点数"
+                }
+              },
+              "queryRef": "CANON.測定点数",
+              "nativeQueryRef": "測定点数"
+            }
+          ]
+        }
+      }
+    },
+    "drillFilterOtherVisuals": true
+  }
+}
