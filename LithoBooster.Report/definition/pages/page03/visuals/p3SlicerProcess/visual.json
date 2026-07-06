@@ -19,13 +19,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "CANON"
+                      "Entity": "工程"
                     }
                   },
                   "Property": "PROCESS"
                 }
               },
-              "queryRef": "CANON.PROCESS",
+              "queryRef": "工程.PROCESS",
               "nativeQueryRef": "PROCESS"
             }
           ]
@@ -49,7 +49,7 @@
     },
     "drillFilterOtherVisuals": true,
     "syncGroup": {
-      "groupName": "PROCESS_Canon",
+      "groupName": "PROCESS",
       "fieldChanges": true,
       "filterChanges": true
     }

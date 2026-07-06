@@ -19,13 +19,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "NIKON"
+                      "Entity": "デバイス種別"
                     }
                   },
                   "Property": "DEVICE_TYPE"
                 }
               },
-              "queryRef": "NIKON.DEVICE_TYPE",
+              "queryRef": "デバイス種別.DEVICE_TYPE",
               "nativeQueryRef": "DEVICE_TYPE"
             }
           ]
@@ -49,7 +49,7 @@
     },
     "drillFilterOtherVisuals": true,
     "syncGroup": {
-      "groupName": "DEVICE_TYPE_Nikon",
+      "groupName": "DEVICE_TYPE",
       "fieldChanges": true,
       "filterChanges": true
     }

@@ -32,9 +32,10 @@ table 日付
 		mode: import
 		source =
 				let
-				    // カレンダー範囲は運用開始時に必要に応じて広げる
-				    StartDate = #date(2026, 1, 1),
-				    EndDate = #date(2027, 12, 31),
+				    // 今日を基準に「2年前の1月1日〜1年後」を生成する（K-07: 範囲固定による日付切れを防止）
+				    Today = Date.From(DateTime.LocalNow()),
+				    StartDate = #date(Date.Year(Today) - 2, 1, 1),
+				    EndDate = Date.AddYears(Today, 1),
 				    DayCount = Duration.Days(EndDate - StartDate) + 1,
 				    Dates = List.Dates(StartDate, DayCount, #duration(1, 0, 0, 0)),
 				    ToTable = Table.FromList(Dates, Splitter.SplitByNothing(), {"Date"}),
