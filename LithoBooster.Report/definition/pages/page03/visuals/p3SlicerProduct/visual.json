@@ -19,13 +19,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "CANON"
+                      "Entity": "製品"
                     }
                   },
                   "Property": "PRODUCT"
                 }
               },
-              "queryRef": "CANON.PRODUCT",
+              "queryRef": "製品.PRODUCT",
               "nativeQueryRef": "PRODUCT"
             }
           ]
@@ -49,7 +49,7 @@
     },
     "drillFilterOtherVisuals": true,
     "syncGroup": {
-      "groupName": "PRODUCT_Canon",
+      "groupName": "PRODUCT",
       "fieldChanges": true,
       "filterChanges": true
     }

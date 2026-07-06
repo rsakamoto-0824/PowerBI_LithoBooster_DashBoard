@@ -1,0 +1,19 @@
+table 製品
+
+	column PRODUCT
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PRODUCT
+
+	partition 製品 = m
+		mode: import
+		source =
+				let
+				    // CanonとNikon両ビューの製品を統合して一覧にする（K-06）
+				    CanonRows = Table.SelectColumns(CANON, {"PRODUCT"}),
+				    NikonRows = Table.SelectColumns(NIKON, {"PRODUCT"}),
+				    Combined = Table.Combine({CanonRows, NikonRows}),
+				    Dedup = Table.Distinct(Combined),
+				    Sorted = Table.Sort(Dedup, {{"PRODUCT", Order.Ascending}})
+				in
+				    Sorted

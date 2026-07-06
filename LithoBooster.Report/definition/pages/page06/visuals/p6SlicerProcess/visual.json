@@ -19,13 +19,13 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "NIKON"
+                      "Entity": "工程"
                     }
                   },
                   "Property": "PROCESS"
                 }
               },
-              "queryRef": "NIKON.PROCESS",
+              "queryRef": "工程.PROCESS",
               "nativeQueryRef": "PROCESS"
             }
           ]
@@ -49,7 +49,7 @@
     },
     "drillFilterOtherVisuals": true,
     "syncGroup": {
-      "groupName": "PROCESS_Nikon",
+      "groupName": "PROCESS",
       "fieldChanges": true,
       "filterChanges": true
     }

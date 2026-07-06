@@ -13,3 +13,27 @@ relationship CanonEqp
 relationship NikonEqp
 	fromColumn: NIKON.EQPID
 	toColumn: 装置.EQPID
+
+relationship CanonProcess
+	fromColumn: CANON.PROCESS
+	toColumn: 工程.PROCESS
+
+relationship NikonProcess
+	fromColumn: NIKON.PROCESS
+	toColumn: 工程.PROCESS
+
+relationship CanonProduct
+	fromColumn: CANON.PRODUCT
+	toColumn: 製品.PRODUCT
+
+relationship NikonProduct
+	fromColumn: NIKON.PRODUCT
+	toColumn: 製品.PRODUCT
+
+relationship CanonDevType
+	fromColumn: CANON.DEVICE_TYPE
+	toColumn: デバイス種別.DEVICE_TYPE
+
+relationship NikonDevType
+	fromColumn: NIKON.DEVICE_TYPE
+	toColumn: デバイス種別.DEVICE_TYPE

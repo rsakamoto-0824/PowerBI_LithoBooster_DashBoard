@@ -1,0 +1,19 @@
+table デバイス種別
+
+	column DEVICE_TYPE
+		dataType: string
+		summarizeBy: none
+		sourceColumn: DEVICE_TYPE
+
+	partition デバイス種別 = m
+		mode: import
+		source =
+				let
+				    // CanonとNikon両ビューのデバイス種別を統合して一覧にする（K-06）
+				    CanonRows = Table.SelectColumns(CANON, {"DEVICE_TYPE"}),
+				    NikonRows = Table.SelectColumns(NIKON, {"DEVICE_TYPE"}),
+				    Combined = Table.Combine({CanonRows, NikonRows}),
+				    Dedup = Table.Distinct(Combined),
+				    Sorted = Table.Sort(Dedup, {{"DEVICE_TYPE", Order.Ascending}})
+				in
+				    Sorted

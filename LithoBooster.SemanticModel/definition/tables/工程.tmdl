@@ -1,0 +1,19 @@
+table 工程
+
+	column PROCESS
+		dataType: string
+		summarizeBy: none
+		sourceColumn: PROCESS
+
+	partition 工程 = m
+		mode: import
+		source =
+				let
+				    // CanonとNikon両ビューの工程を統合して一覧にする（K-06）
+				    CanonRows = Table.SelectColumns(CANON, {"PROCESS"}),
+				    NikonRows = Table.SelectColumns(NIKON, {"PROCESS"}),
+				    Combined = Table.Combine({CanonRows, NikonRows}),
+				    Dedup = Table.Distinct(Combined),
+				    Sorted = Table.Sort(Dedup, {{"PROCESS", Order.Ascending}})
+				in
+				    Sorted

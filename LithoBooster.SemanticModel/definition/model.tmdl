@@ -10,3 +10,6 @@ ref table CANON
 ref table NIKON
 ref table 日付
 ref table 装置
+ref table 工程
+ref table 製品
+ref table デバイス種別
