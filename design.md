@@ -20,8 +20,9 @@ LithoBooster.SemanticModel/    # セマンティックモデル（TMDL）
 │       └── 装置.tmdl          # 装置ディメンション（両ビューからDISTINCT）
 LithoBooster.Report/           # レポート定義（PBIR）
 └── definition/
+    ├── version.json           # PBIR定義バージョン（必須。無いとDesktopで開けない）
     ├── report.json
-    └── pages/                 # P1〜P7の空ページ（雛形）
+    └── pages/                 # P1〜P11（分析7 + ツールチップ2 + 明細2）
 themes/theme.json              # テーマ（モックアップと同じ配色）
 deneb/*.json                   # Deneb（Vega-Lite）定義
 ```
