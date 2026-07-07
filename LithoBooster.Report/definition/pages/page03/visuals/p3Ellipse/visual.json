@@ -39,7 +39,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "2. フィールド: cx/cy=Shot座標, varX/varY/covXY/waferCount（DAXメジャー）",
+                    "value": "2. Denebの「値」へ次のフィールドを名前どおりに追加する: SHOTINFO_PosX, SHOTINFO_PosY, 計測値X 平均, 計測値Y 平均, 計測値X2乗 平均, 計測値Y2乗 平均, 計測値XY 平均, Wafer数",
                     "textStyle": {
                       "fontSize": "9pt"
                     }
@@ -49,7 +49,17 @@
               {
                 "textRuns": [
                   {
-                    "value": "3. deneb/v22_covariance_ellipse.json の内容をDenebエディタへ貼り付ける",
+                    "value": "3. deneb/p3_v22_covariance_ellipse.json の内容をDenebエディタへ貼り付ける",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "※ 分散=E[X²]−E[X]²、共分散=E[XY]−E[X]E[Y]をDeneb側で計算。Wafer数3未満は非表示。楕円半径はnm→mm誇張倍率で表示",
                     "textStyle": {
                       "fontSize": "9pt"
                     }

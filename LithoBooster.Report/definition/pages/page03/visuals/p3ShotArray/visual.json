@@ -39,7 +39,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "2. フィールド: SHOTINFO_PosX/PosY, SEPA_*+SAME_*（符号規約はI-009）",
+                    "value": "2. Denebの「値」へ次のフィールドを名前どおりに追加する: SHOTINFO_PosX, SHOTINFO_PosY, SEPA SHIFTX 平均, SEPA SHIFTY 平均, SAME SHIFTX 平均, SAME SHIFTY 平均, SEPA SMAGX 平均, SEPA SMAGY 平均, SAME SMAGX 平均, SAME SMAGY 平均, SEPA SROTX 平均, SEPA SROTY 平均, SAME SROTX 平均, SAME SROTY 平均",
                     "textStyle": {
                       "fontSize": "9pt"
                     }
@@ -49,7 +49,17 @@
               {
                 "textRuns": [
                   {
-                    "value": "3. deneb/v26_shot_array.json の内容をDenebエディタへ貼り付ける",
+                    "value": "3. deneb/p3_v26_shot_array_canon.json の内容をDenebエディタへ貼り付ける",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "※ 灰=公称格子 / 赤=補正前(逆算)。逆算式の符号規約はI-009確認後に確定。Shot枠24×28mm前提",
                     "textStyle": {
                       "fontSize": "9pt"
                     }

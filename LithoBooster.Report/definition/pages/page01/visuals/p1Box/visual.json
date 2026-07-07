@@ -39,7 +39,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "2. フィールド: OPERATION, RAW_DATA_X, RAW_DATA_Y（集計しない）",
+                    "value": "2. Denebの「値」へ次のフィールドを名前どおりに追加する: OPERATION, WAFER_ID, SHOTINFO_SHOTNO, MARKINFO_MARKNO, 計測値X 平均, 計測値Y 平均",
                     "textStyle": {
                       "fontSize": "9pt"
                     }
@@ -49,7 +49,17 @@
               {
                 "textRuns": [
                   {
-                    "value": "3. deneb/v29_boxplot.json の内容をDenebエディタへ貼り付ける",
+                    "value": "3. deneb/p1_v01_box_measxy_by_operation.json の内容をDenebエディタへ貼り付ける",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "※ 左=X成分、右=Y成分。各パネル内でOPERATIONが隣接し差を比較できる。WAFER_ID/SHOTNO/MARKNOはMark単位の行を得るためのキー",
                     "textStyle": {
                       "fontSize": "9pt"
                     }

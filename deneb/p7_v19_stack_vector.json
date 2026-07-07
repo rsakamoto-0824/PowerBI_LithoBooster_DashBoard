@@ -1,0 +1,508 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-19 Shotスタック平均ベクトル。全体/Scan方向1/Scan方向2の3パネル",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "MARKINFO_POSX",
+      "MARKINFO_POSY",
+      "SHOTINFO_DIRECTION",
+      "計測値X 平均",
+      "計測値Y 平均",
+      "測定点数"
+    ],
+    "note": "全体パネルは点数による重み付き平均で方向1/2を合成。Mark座標はmm（Shot中心原点）"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "params": [
+    {
+      "name": "stackArrowScale",
+      "value": 0.05,
+      "bind": {
+        "input": "range",
+        "min": 0.005,
+        "max": 0.5,
+        "step": 0.005,
+        "name": "矢印倍率(mm/nm): "
+      }
+    }
+  ],
+  "hconcat": [
+    {
+      "title": "全体（方向区別なし）",
+      "transform": [
+        {
+          "calculate": "datum['測定点数'] * datum['計測値X 平均']",
+          "as": "wx"
+        },
+        {
+          "calculate": "datum['測定点数'] * datum['計測値Y 平均']",
+          "as": "wy"
+        },
+        {
+          "aggregate": [
+            {
+              "op": "sum",
+              "field": "wx",
+              "as": "sumWx"
+            },
+            {
+              "op": "sum",
+              "field": "wy",
+              "as": "sumWy"
+            },
+            {
+              "op": "sum",
+              "field": "測定点数",
+              "as": "sumN"
+            }
+          ],
+          "groupby": [
+            "MARKINFO_POSX",
+            "MARKINFO_POSY"
+          ]
+        }
+      ],
+      "layer": [
+        {
+          "data": {
+            "values": [
+              {}
+            ]
+          },
+          "transform": [
+            {
+              "calculate": "-12",
+              "as": "fx1"
+            },
+            {
+              "calculate": "12",
+              "as": "fx2"
+            },
+            {
+              "calculate": "-14",
+              "as": "fy1"
+            },
+            {
+              "calculate": "14",
+              "as": "fy2"
+            }
+          ],
+          "mark": {
+            "type": "rect",
+            "fill": null,
+            "stroke": "#C8CCDA",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "fx1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "fx2"
+            },
+            "y": {
+              "field": "fy1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y2": {
+              "field": "fy2"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "calculate": "datum.sumWx / max(datum.sumN, 1)",
+              "as": "avgX"
+            },
+            {
+              "calculate": "datum.sumWy / max(datum.sumN, 1)",
+              "as": "avgY"
+            },
+            {
+              "calculate": "sqrt(datum.avgX * datum.avgX + datum.avgY * datum.avgY)",
+              "as": "vecLenNm"
+            },
+            {
+              "calculate": "datum['MARKINFO_POSX'] + datum.avgX * stackArrowScale",
+              "as": "tipX"
+            },
+            {
+              "calculate": "datum['MARKINFO_POSY'] + datum.avgY * stackArrowScale",
+              "as": "tipY"
+            }
+          ],
+          "mark": {
+            "type": "rule",
+            "strokeWidth": 2,
+            "strokeCap": "round"
+          },
+          "encoding": {
+            "x": {
+              "field": "MARKINFO_POSX",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y": {
+              "field": "MARKINFO_POSY",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "tipX"
+            },
+            "y2": {
+              "field": "tipY"
+            },
+            "color": {
+              "field": "vecLenNm",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "viridis"
+              },
+              "legend": {
+                "title": "平均ベクトル長 (nm)"
+              }
+            }
+          }
+        }
+      ],
+      "width": 200,
+      "height": 200
+    },
+    {
+      "title": "Scan方向1",
+      "transform": [
+        {
+          "filter": "datum['SHOTINFO_DIRECTION'] === 1"
+        }
+      ],
+      "layer": [
+        {
+          "data": {
+            "values": [
+              {}
+            ]
+          },
+          "transform": [
+            {
+              "calculate": "-12",
+              "as": "fx1"
+            },
+            {
+              "calculate": "12",
+              "as": "fx2"
+            },
+            {
+              "calculate": "-14",
+              "as": "fy1"
+            },
+            {
+              "calculate": "14",
+              "as": "fy2"
+            }
+          ],
+          "mark": {
+            "type": "rect",
+            "fill": null,
+            "stroke": "#C8CCDA",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "fx1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "fx2"
+            },
+            "y": {
+              "field": "fy1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y2": {
+              "field": "fy2"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "calculate": "datum['計測値X 平均']",
+              "as": "avgX"
+            },
+            {
+              "calculate": "datum['計測値Y 平均']",
+              "as": "avgY"
+            },
+            {
+              "calculate": "sqrt(datum.avgX * datum.avgX + datum.avgY * datum.avgY)",
+              "as": "vecLenNm"
+            },
+            {
+              "calculate": "datum['MARKINFO_POSX'] + datum.avgX * stackArrowScale",
+              "as": "tipX"
+            },
+            {
+              "calculate": "datum['MARKINFO_POSY'] + datum.avgY * stackArrowScale",
+              "as": "tipY"
+            }
+          ],
+          "mark": {
+            "type": "rule",
+            "strokeWidth": 2,
+            "strokeCap": "round"
+          },
+          "encoding": {
+            "x": {
+              "field": "MARKINFO_POSX",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y": {
+              "field": "MARKINFO_POSY",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "tipX"
+            },
+            "y2": {
+              "field": "tipY"
+            },
+            "color": {
+              "field": "vecLenNm",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "viridis"
+              },
+              "legend": {
+                "title": "平均ベクトル長 (nm)"
+              }
+            }
+          }
+        }
+      ],
+      "width": 200,
+      "height": 200
+    },
+    {
+      "title": "Scan方向2",
+      "transform": [
+        {
+          "filter": "datum['SHOTINFO_DIRECTION'] === 2"
+        }
+      ],
+      "layer": [
+        {
+          "data": {
+            "values": [
+              {}
+            ]
+          },
+          "transform": [
+            {
+              "calculate": "-12",
+              "as": "fx1"
+            },
+            {
+              "calculate": "12",
+              "as": "fx2"
+            },
+            {
+              "calculate": "-14",
+              "as": "fy1"
+            },
+            {
+              "calculate": "14",
+              "as": "fy2"
+            }
+          ],
+          "mark": {
+            "type": "rect",
+            "fill": null,
+            "stroke": "#C8CCDA",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "fx1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "fx2"
+            },
+            "y": {
+              "field": "fy1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y2": {
+              "field": "fy2"
+            }
+          }
+        },
+        {
+          "transform": [
+            {
+              "calculate": "datum['計測値X 平均']",
+              "as": "avgX"
+            },
+            {
+              "calculate": "datum['計測値Y 平均']",
+              "as": "avgY"
+            },
+            {
+              "calculate": "sqrt(datum.avgX * datum.avgX + datum.avgY * datum.avgY)",
+              "as": "vecLenNm"
+            },
+            {
+              "calculate": "datum['MARKINFO_POSX'] + datum.avgX * stackArrowScale",
+              "as": "tipX"
+            },
+            {
+              "calculate": "datum['MARKINFO_POSY'] + datum.avgY * stackArrowScale",
+              "as": "tipY"
+            }
+          ],
+          "mark": {
+            "type": "rule",
+            "strokeWidth": 2,
+            "strokeCap": "round"
+          },
+          "encoding": {
+            "x": {
+              "field": "MARKINFO_POSX",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y": {
+              "field": "MARKINFO_POSY",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "tipX"
+            },
+            "y2": {
+              "field": "tipY"
+            },
+            "color": {
+              "field": "vecLenNm",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "viridis"
+              },
+              "legend": {
+                "title": "平均ベクトル長 (nm)"
+              }
+            }
+          }
+        }
+      ],
+      "width": 200,
+      "height": 200
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

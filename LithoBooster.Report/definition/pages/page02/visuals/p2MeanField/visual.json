@@ -39,7 +39,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "2. フィールド: SHOTINFO_PosX/PosY, MARKINFO_POSX/POSY, 計測値X 平均, 計測値Y 平均, EQPID, OPERATION",
+                    "value": "2. Denebの「値」へ次のフィールドを名前どおりに追加する: EQPID, OPERATION, SHOTINFO_PosX, SHOTINFO_PosY, MARKINFO_POSX, MARKINFO_POSY, 計測値X 平均, 計測値Y 平均",
                     "textStyle": {
                       "fontSize": "9pt"
                     }
@@ -49,7 +49,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "3. deneb/v11_vector_map.json の内容をDenebエディタへ貼り付ける",
+                    "value": "3. deneb/p2_v12_mean_vector_field.json の内容をDenebエディタへ貼り付ける",
                     "textStyle": {
                       "fontSize": "9pt"
                     }
@@ -59,7 +59,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "※ facet（行=EQPID、列=OPERATION）をDeneb側で追加する",
+                    "value": "※ Shotピッチ(枠)はOPERATIONから自動判定（RDH-MLF: 24×28 / MSR-MLF: 22×26）",
                     "textStyle": {
                       "fontSize": "9pt"
                     }

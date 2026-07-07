@@ -1,0 +1,285 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-11 計測値ベクトルマップ。Mark位置ごとの計測値X/Yを矢印表示（倍率スライダー付き）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "SHOTINFO_PosX",
+      "SHOTINFO_PosY",
+      "MARKINFO_POSX",
+      "MARKINFO_POSY",
+      "計測値X 平均",
+      "計測値Y 平均"
+    ],
+    "note": "Shot座標はnm、Mark座標はmm。矢印の長さ=計測値(nm)×倍率(mm/nm)"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "params": [
+    {
+      "name": "arrowScale",
+      "value": 0.05,
+      "bind": {
+        "input": "range",
+        "min": 0.005,
+        "max": 0.5,
+        "step": 0.005,
+        "name": "矢印倍率(mm/nm): "
+      }
+    },
+    {
+      "name": "pitchX",
+      "value": 24,
+      "bind": {
+        "input": "range",
+        "min": 10,
+        "max": 40,
+        "step": 1,
+        "name": "Shot幅(mm): "
+      }
+    },
+    {
+      "name": "pitchY",
+      "value": 28,
+      "bind": {
+        "input": "range",
+        "min": 10,
+        "max": 40,
+        "step": 1,
+        "name": "Shot高さ(mm): "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "datum['SHOTINFO_PosX'] / 1000000",
+      "as": "shotXmm"
+    },
+    {
+      "calculate": "datum['SHOTINFO_PosY'] / 1000000",
+      "as": "shotYmm"
+    },
+    {
+      "calculate": "pitchX",
+      "as": "pitchXmm"
+    },
+    {
+      "calculate": "pitchY",
+      "as": "pitchYmm"
+    },
+    {
+      "calculate": "datum.shotXmm - datum.pitchXmm / 2",
+      "as": "frameX1"
+    },
+    {
+      "calculate": "datum.shotXmm + datum.pitchXmm / 2",
+      "as": "frameX2"
+    },
+    {
+      "calculate": "datum.shotYmm - datum.pitchYmm / 2",
+      "as": "frameY1"
+    },
+    {
+      "calculate": "datum.shotYmm + datum.pitchYmm / 2",
+      "as": "frameY2"
+    },
+    {
+      "calculate": "datum.shotXmm + datum['MARKINFO_POSX']",
+      "as": "markXmm"
+    },
+    {
+      "calculate": "datum.shotYmm + datum['MARKINFO_POSY']",
+      "as": "markYmm"
+    },
+    {
+      "calculate": "sqrt(datum['計測値X 平均'] * datum['計測値X 平均'] + datum['計測値Y 平均'] * datum['計測値Y 平均'])",
+      "as": "vecLenNm"
+    },
+    {
+      "calculate": "datum.markXmm + datum['計測値X 平均'] * arrowScale",
+      "as": "tipXmm"
+    },
+    {
+      "calculate": "datum.markYmm + datum['計測値Y 平均'] * arrowScale",
+      "as": "tipYmm"
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "sequence": {
+          "start": 0,
+          "stop": 6.32,
+          "step": 0.05,
+          "as": "t"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "150 * cos(datum.t)",
+          "as": "circleX"
+        },
+        {
+          "calculate": "150 * sin(datum.t)",
+          "as": "circleY"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "stroke": "#9AA0B4",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "circleX",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "circleY",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "order": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "rect",
+        "fill": null,
+        "stroke": "#C8CCDA",
+        "strokeWidth": 0.5
+      },
+      "encoding": {
+        "x": {
+          "field": "frameX1",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "x2": {
+          "field": "frameX2"
+        },
+        "y": {
+          "field": "frameY1",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y2": {
+          "field": "frameY2"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 1.2,
+        "strokeCap": "round"
+      },
+      "encoding": {
+        "x": {
+          "field": "markXmm",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "markYmm",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "x2": {
+          "field": "tipXmm"
+        },
+        "y2": {
+          "field": "tipYmm"
+        },
+        "color": {
+          "field": "vecLenNm",
+          "type": "quantitative",
+          "scale": {
+            "scheme": "viridis"
+          },
+          "legend": {
+            "title": "ベクトル長 (nm)"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "markXmm",
+            "title": "X (mm)",
+            "format": ".1f"
+          },
+          {
+            "field": "markYmm",
+            "title": "Y (mm)",
+            "format": ".1f"
+          },
+          {
+            "field": "計測値X 平均",
+            "title": "計測値X (nm)",
+            "format": ".1f"
+          },
+          {
+            "field": "計測値Y 平均",
+            "title": "計測値Y (nm)",
+            "format": ".1f"
+          }
+        ]
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container",
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

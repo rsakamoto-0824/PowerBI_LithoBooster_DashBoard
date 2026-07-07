@@ -39,7 +39,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "2. フィールド: CORRDATA_POSX/POSY, CORRDATA_OFSETX/Y（SCAL/ROTへ切替）",
+                    "value": "2. Denebの「値」へ次のフィールドを名前どおりに追加する: CORRDATA_POSX, CORRDATA_POSY, 補正量X 平均, 補正量Y 平均, CORR SCALX 平均, CORR SCALY 平均, CORR ROTX 平均, CORR ROTY 平均",
                     "textStyle": {
                       "fontSize": "9pt"
                     }
@@ -49,7 +49,17 @@
               {
                 "textRuns": [
                   {
-                    "value": "3. deneb/v11_vector_map.json の内容をDenebエディタへ貼り付ける",
+                    "value": "3. deneb/p6_v14_corr_vector_map.json の内容をDenebエディタへ貼り付ける",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "※ 単位: OFSET=nm / SCAL=ppm / ROT=µrad（想定、I-002）。成分はドロップダウンで切替",
                     "textStyle": {
                       "fontSize": "9pt"
                     }

@@ -1,0 +1,122 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-29 計測値X/Y分布（全体 / Scan方向1 / Scan方向2、X成分/Y成分の2面）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "SHOTINFO_DIRECTION",
+      "WAFER_ID",
+      "SHOTINFO_SHOTNO",
+      "MARKINFO_MARKNO",
+      "計測値X 平均",
+      "計測値Y 平均"
+    ],
+    "note": "左=X成分、右=Y成分。各パネル内で全体/方向1/方向2が隣接し、Scan方向の差を成分別に比較できる"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "hconcat": [
+    {
+      "title": "X成分",
+      "mark": {
+        "type": "boxplot",
+        "extent": 1.5,
+        "size": 18
+      },
+      "encoding": {
+        "x": {
+          "field": "区分",
+          "type": "nominal",
+          "title": null,
+          "axis": {
+            "labelAngle": 0
+          },
+          "sort": [
+            "全体",
+            "Scan方向1",
+            "Scan方向2"
+          ]
+        },
+        "y": {
+          "field": "計測値X 平均",
+          "type": "quantitative",
+          "title": "X成分 (nm)"
+        },
+        "color": {
+          "value": "#1E2761"
+        }
+      },
+      "width": 150,
+      "height": 140,
+      "transform": [
+        {
+          "calculate": "['全体', 'Scan方向' + datum['SHOTINFO_DIRECTION']]",
+          "as": "区分"
+        },
+        {
+          "flatten": [
+            "区分"
+          ]
+        }
+      ]
+    },
+    {
+      "title": "Y成分",
+      "mark": {
+        "type": "boxplot",
+        "extent": 1.5,
+        "size": 18
+      },
+      "encoding": {
+        "x": {
+          "field": "区分",
+          "type": "nominal",
+          "title": null,
+          "axis": {
+            "labelAngle": 0
+          },
+          "sort": [
+            "全体",
+            "Scan方向1",
+            "Scan方向2"
+          ]
+        },
+        "y": {
+          "field": "計測値Y 平均",
+          "type": "quantitative",
+          "title": "Y成分 (nm)"
+        },
+        "color": {
+          "value": "#F96167"
+        }
+      },
+      "width": 150,
+      "height": 140,
+      "transform": [
+        {
+          "calculate": "['全体', 'Scan方向' + datum['SHOTINFO_DIRECTION']]",
+          "as": "区分"
+        },
+        {
+          "flatten": [
+            "区分"
+          ]
+        }
+      ]
+    }
+  ],
+  "resolve": {
+    "scale": {
+      "y": "shared"
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

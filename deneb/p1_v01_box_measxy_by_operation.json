@@ -1,0 +1,90 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-01 計測値X/Yの箱ひげ図（OPERATION別、X成分/Y成分の2面）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "OPERATION",
+      "WAFER_ID",
+      "SHOTINFO_SHOTNO",
+      "MARKINFO_MARKNO",
+      "計測値X 平均",
+      "計測値Y 平均"
+    ],
+    "note": "左=X成分、右=Y成分。各パネル内でOPERATIONが隣接し差を比較できる。WAFER_ID/SHOTNO/MARKNOはMark単位の行を得るためのキー"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "hconcat": [
+    {
+      "title": "X成分",
+      "mark": {
+        "type": "boxplot",
+        "extent": 1.5,
+        "size": 18
+      },
+      "encoding": {
+        "x": {
+          "field": "OPERATION",
+          "type": "nominal",
+          "title": null,
+          "axis": {
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "計測値X 平均",
+          "type": "quantitative",
+          "title": "X成分 (nm)"
+        },
+        "color": {
+          "value": "#1E2761"
+        }
+      },
+      "width": 150,
+      "height": 140
+    },
+    {
+      "title": "Y成分",
+      "mark": {
+        "type": "boxplot",
+        "extent": 1.5,
+        "size": 18
+      },
+      "encoding": {
+        "x": {
+          "field": "OPERATION",
+          "type": "nominal",
+          "title": null,
+          "axis": {
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "計測値Y 平均",
+          "type": "quantitative",
+          "title": "Y成分 (nm)"
+        },
+        "color": {
+          "value": "#F96167"
+        }
+      },
+      "width": 150,
+      "height": 140
+    }
+  ],
+  "resolve": {
+    "scale": {
+      "y": "shared"
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

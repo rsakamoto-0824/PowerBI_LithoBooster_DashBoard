@@ -39,7 +39,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "2. フィールド: SHOTINFO_PosX/PosY, MARKINFO_POSX/POSY, RAW_DATA_X/Y",
+                    "value": "2. Denebの「値」へ次のフィールドを名前どおりに追加する: SHOTINFO_PosX, SHOTINFO_PosY, MARKINFO_POSX, MARKINFO_POSY, 計測値X 平均, 計測値Y 平均",
                     "textStyle": {
                       "fontSize": "9pt"
                     }
@@ -49,7 +49,17 @@
               {
                 "textRuns": [
                   {
-                    "value": "3. deneb/v11_vector_map.json の内容をDenebエディタへ貼り付ける",
+                    "value": "3. deneb/p3_v11_vector_map.json の内容をDenebエディタへ貼り付ける",
+                    "textStyle": {
+                      "fontSize": "9pt"
+                    }
+                  }
+                ]
+              },
+              {
+                "textRuns": [
+                  {
+                    "value": "※ Shot座標はnm、Mark座標はmm。矢印の長さ=計測値(nm)×倍率(mm/nm)",
                     "textStyle": {
                       "fontSize": "9pt"
                     }

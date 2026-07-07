@@ -1,0 +1,325 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-26 補正前Shot配列マップ（Canon）。SEPA+SAMEの線形補正から補正前の格子を逆算し誇張表示",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "SHOTINFO_PosX",
+      "SHOTINFO_PosY",
+      "SEPA SHIFTX 平均",
+      "SEPA SHIFTY 平均",
+      "SAME SHIFTX 平均",
+      "SAME SHIFTY 平均",
+      "SEPA SMAGX 平均",
+      "SEPA SMAGY 平均",
+      "SAME SMAGX 平均",
+      "SAME SMAGY 平均",
+      "SEPA SROTX 平均",
+      "SEPA SROTY 平均",
+      "SAME SROTX 平均",
+      "SAME SROTY 平均"
+    ],
+    "note": "灰=公称格子 / 赤=補正前(逆算)。逆算式の符号規約はI-009確認後に確定。Shot枠24×28mm前提"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "params": [
+    {
+      "name": "exaggerate",
+      "value": 40000,
+      "bind": {
+        "input": "range",
+        "min": 1000,
+        "max": 200000,
+        "step": 1000,
+        "name": "誇張倍率: "
+      }
+    },
+    {
+      "name": "pitchX",
+      "value": 24,
+      "bind": {
+        "input": "range",
+        "min": 10,
+        "max": 40,
+        "step": 1,
+        "name": "Shot幅(mm): "
+      }
+    },
+    {
+      "name": "pitchY",
+      "value": 28,
+      "bind": {
+        "input": "range",
+        "min": 10,
+        "max": 40,
+        "step": 1,
+        "name": "Shot高さ(mm): "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "datum['SHOTINFO_PosX'] / 1000000",
+      "as": "shotXmm"
+    },
+    {
+      "calculate": "datum['SHOTINFO_PosY'] / 1000000",
+      "as": "shotYmm"
+    },
+    {
+      "calculate": "datum['SEPA SHIFTX 平均'] + datum['SAME SHIFTX 平均']",
+      "as": "shiftXNm"
+    },
+    {
+      "calculate": "datum['SEPA SHIFTY 平均'] + datum['SAME SHIFTY 平均']",
+      "as": "shiftYNm"
+    },
+    {
+      "calculate": "datum['SEPA SMAGX 平均'] + datum['SAME SMAGX 平均']",
+      "as": "magXPpm"
+    },
+    {
+      "calculate": "datum['SEPA SMAGY 平均'] + datum['SAME SMAGY 平均']",
+      "as": "magYPpm"
+    },
+    {
+      "calculate": "datum['SEPA SROTX 平均'] + datum['SAME SROTX 平均']",
+      "as": "rotXUrad"
+    },
+    {
+      "calculate": "datum['SEPA SROTY 平均'] + datum['SAME SROTY 平均']",
+      "as": "rotYUrad"
+    },
+    {
+      "calculate": "pitchX",
+      "as": "pitchXmm"
+    },
+    {
+      "calculate": "pitchY",
+      "as": "pitchYmm"
+    },
+    {
+      "calculate": "[[-1,-1,0],[1,-1,1],[1,1,2],[-1,1,3],[-1,-1,4]]",
+      "as": "corners"
+    },
+    {
+      "flatten": [
+        "corners"
+      ]
+    },
+    {
+      "calculate": "datum.corners[0] * datum.pitchXmm / 2",
+      "as": "rxMm"
+    },
+    {
+      "calculate": "datum.corners[1] * datum.pitchYmm / 2",
+      "as": "ryMm"
+    },
+    {
+      "calculate": "datum.corners[2]",
+      "as": "cornerOrder"
+    },
+    {
+      "calculate": "datum.shiftXNm + datum.magXPpm * datum.rxMm - datum.rotXUrad * datum.ryMm",
+      "as": "dxNm"
+    },
+    {
+      "calculate": "datum.shiftYNm + datum.magYPpm * datum.ryMm + datum.rotYUrad * datum.rxMm",
+      "as": "dyNm"
+    },
+    {
+      "calculate": "datum.shotXmm + datum.rxMm",
+      "as": "nomX"
+    },
+    {
+      "calculate": "datum.shotYmm + datum.ryMm",
+      "as": "nomY"
+    },
+    {
+      "calculate": "datum.nomX + datum.dxNm / 1000000 * exaggerate",
+      "as": "preX"
+    },
+    {
+      "calculate": "datum.nomY + datum.dyNm / 1000000 * exaggerate",
+      "as": "preY"
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "sequence": {
+          "start": 0,
+          "stop": 6.32,
+          "step": 0.05,
+          "as": "t"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "150 * cos(datum.t)",
+          "as": "circleX"
+        },
+        {
+          "calculate": "150 * sin(datum.t)",
+          "as": "circleY"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "stroke": "#9AA0B4",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "circleX",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "circleY",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "order": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "stroke": "#C8CCDA",
+        "strokeWidth": 0.6
+      },
+      "encoding": {
+        "x": {
+          "field": "nomX",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "nomY",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "detail": [
+          {
+            "field": "SHOTINFO_PosX"
+          },
+          {
+            "field": "SHOTINFO_PosY"
+          }
+        ],
+        "order": {
+          "field": "cornerOrder"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "stroke": "#F96167",
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "x": {
+          "field": "preX",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "preY",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "detail": [
+          {
+            "field": "SHOTINFO_PosX"
+          },
+          {
+            "field": "SHOTINFO_PosY"
+          }
+        ],
+        "order": {
+          "field": "cornerOrder"
+        },
+        "tooltip": [
+          {
+            "field": "shotXmm",
+            "title": "Shot X (mm)",
+            "format": ".1f"
+          },
+          {
+            "field": "shotYmm",
+            "title": "Shot Y (mm)",
+            "format": ".1f"
+          },
+          {
+            "field": "dxNm",
+            "title": "変位X (nm)",
+            "format": ".1f"
+          },
+          {
+            "field": "dyNm",
+            "title": "変位Y (nm)",
+            "format": ".1f"
+          }
+        ]
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container",
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

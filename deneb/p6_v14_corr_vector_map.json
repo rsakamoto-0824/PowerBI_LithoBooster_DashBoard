@@ -1,0 +1,206 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-14 補正点ベクトルマップ（Nikon）。表示成分をOFSET/SCAL/ROTで切替",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "CORRDATA_POSX",
+      "CORRDATA_POSY",
+      "補正量X 平均",
+      "補正量Y 平均",
+      "CORR SCALX 平均",
+      "CORR SCALY 平均",
+      "CORR ROTX 平均",
+      "CORR ROTY 平均"
+    ],
+    "note": "単位: OFSET=nm / SCAL=ppm / ROT=µrad（想定、I-002）。成分はドロップダウンで切替"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "params": [
+    {
+      "name": "component",
+      "value": "OFSET",
+      "bind": {
+        "input": "select",
+        "options": [
+          "OFSET",
+          "SCAL",
+          "ROT"
+        ],
+        "name": "表示成分: "
+      }
+    },
+    {
+      "name": "arrowScale",
+      "value": 0.1,
+      "bind": {
+        "input": "range",
+        "min": 0.005,
+        "max": 1,
+        "step": 0.005,
+        "name": "矢印倍率: "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "component === 'OFSET' ? datum['補正量X 平均'] : component === 'SCAL' ? datum['CORR SCALX 平均'] : datum['CORR ROTX 平均']",
+      "as": "vx"
+    },
+    {
+      "calculate": "component === 'OFSET' ? datum['補正量Y 平均'] : component === 'SCAL' ? datum['CORR SCALY 平均'] : datum['CORR ROTY 平均']",
+      "as": "vy"
+    },
+    {
+      "calculate": "sqrt(datum.vx * datum.vx + datum.vy * datum.vy)",
+      "as": "vecLen"
+    },
+    {
+      "calculate": "datum['CORRDATA_POSX'] + datum.vx * arrowScale",
+      "as": "tipX"
+    },
+    {
+      "calculate": "datum['CORRDATA_POSY'] + datum.vy * arrowScale",
+      "as": "tipY"
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "sequence": {
+          "start": 0,
+          "stop": 6.32,
+          "step": 0.05,
+          "as": "t"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "150 * cos(datum.t)",
+          "as": "circleX"
+        },
+        {
+          "calculate": "150 * sin(datum.t)",
+          "as": "circleY"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "stroke": "#9AA0B4",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "circleX",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "circleY",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "order": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "rule",
+        "strokeWidth": 1.2,
+        "strokeCap": "round"
+      },
+      "encoding": {
+        "x": {
+          "field": "CORRDATA_POSX",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "CORRDATA_POSY",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "x2": {
+          "field": "tipX"
+        },
+        "y2": {
+          "field": "tipY"
+        },
+        "color": {
+          "field": "vecLen",
+          "type": "quantitative",
+          "scale": {
+            "scheme": "viridis"
+          },
+          "legend": {
+            "title": "ベクトル長"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "CORRDATA_POSX",
+            "title": "X (mm)",
+            "format": ".1f"
+          },
+          {
+            "field": "CORRDATA_POSY",
+            "title": "Y (mm)",
+            "format": ".1f"
+          },
+          {
+            "field": "vx",
+            "title": "成分X",
+            "format": ".2f"
+          },
+          {
+            "field": "vy",
+            "title": "成分Y",
+            "format": ".2f"
+          }
+        ]
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container",
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}
