@@ -1,6 +1,6 @@
 {
   "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
-  "description": "V-21 計測値X/YのMark位置別分布（箱ひげ図）",
+  "description": "V-21 計測値X/YのMark位置別分布（X成分/Y成分の2面）",
   "usermeta": {
     "deneb": {
       "build": "per-visual",
@@ -13,67 +13,72 @@
       "計測値X 平均",
       "計測値Y 平均"
     ],
-    "note": "x軸はMark番号。WAFER_ID/SHOTNOは行キー"
+    "note": "左=X成分、右=Y成分。各パネル内でMark番号が隣接し、Mark番号ごとの差を成分別に比較できる"
   },
   "data": {
     "name": "dataset"
   },
-  "transform": [
+  "hconcat": [
     {
-      "fold": [
-        "計測値X 平均",
-        "計測値Y 平均"
-      ],
-      "as": [
-        "component",
-        "value"
-      ]
+      "title": "X成分",
+      "mark": {
+        "type": "boxplot",
+        "extent": 1.5,
+        "size": 18
+      },
+      "encoding": {
+        "x": {
+          "field": "MARKINFO_MARKNO",
+          "type": "ordinal",
+          "title": null,
+          "axis": {
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "計測値X 平均",
+          "type": "quantitative",
+          "title": "X成分 (nm)"
+        },
+        "color": {
+          "value": "#1E2761"
+        }
+      },
+      "width": 150,
+      "height": 140
     },
     {
-      "calculate": "datum.component === '計測値X 平均' ? 'X成分' : 'Y成分'",
-      "as": "成分"
+      "title": "Y成分",
+      "mark": {
+        "type": "boxplot",
+        "extent": 1.5,
+        "size": 18
+      },
+      "encoding": {
+        "x": {
+          "field": "MARKINFO_MARKNO",
+          "type": "ordinal",
+          "title": null,
+          "axis": {
+            "labelAngle": 0
+          }
+        },
+        "y": {
+          "field": "計測値Y 平均",
+          "type": "quantitative",
+          "title": "Y成分 (nm)"
+        },
+        "color": {
+          "value": "#F96167"
+        }
+      },
+      "width": 150,
+      "height": 140
     }
   ],
-  "mark": {
-    "type": "boxplot",
-    "extent": 1.5,
-    "size": 22
-  },
-  "encoding": {
-    "x": {
-      "field": "MARKINFO_MARKNO",
-      "type": "ordinal",
-      "title": null,
-      "axis": {
-        "labelAngle": 0
-      }
-    },
-    "column": {
-      "field": "成分",
-      "type": "nominal",
-      "header": {
-        "title": null
-      }
-    },
-    "y": {
-      "field": "value",
-      "type": "quantitative",
-      "title": "計測値 (nm)"
-    },
-    "color": {
-      "field": "成分",
-      "type": "nominal",
-      "scale": {
-        "domain": [
-          "X成分",
-          "Y成分"
-        ],
-        "range": [
-          "#1E2761",
-          "#F96167"
-        ]
-      },
-      "legend": null
+  "resolve": {
+    "scale": {
+      "y": "shared"
     }
   },
   "config": {

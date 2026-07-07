@@ -3,10 +3,10 @@
   "name": "p3SlicerWaferId",
   "position": {
     "x": 8,
-    "y": 438,
+    "y": 374,
     "z": 6,
     "width": 184,
-    "height": 62
+    "height": 48
   },
   "visual": {
     "visualType": "slicer",
@@ -40,6 +40,39 @@
               "expr": {
                 "Literal": {
                   "Value": "'Dropdown'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "items": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
                 }
               }
             }

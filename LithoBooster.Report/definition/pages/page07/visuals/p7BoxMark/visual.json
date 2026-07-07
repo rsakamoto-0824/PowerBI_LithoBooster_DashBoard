@@ -59,7 +59,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "※ x軸はMark番号。WAFER_ID/SHOTNOは行キー",
+                    "value": "※ 左=X成分、右=Y成分。各パネル内でMark番号が隣接し、Mark番号ごとの差を成分別に比較できる",
                     "textStyle": {
                       "fontSize": "9pt"
                     }

@@ -6,7 +6,7 @@
     "y": 64,
     "z": 1,
     "width": 184,
-    "height": 96
+    "height": 88
   },
   "visual": {
     "visualType": "slicer",
@@ -132,6 +132,39 @@
                     }
                   }
                 ]
+              }
+            }
+          }
+        }
+      ],
+      "header": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "items": [
+        {
+          "properties": {
+            "textSize": {
+              "expr": {
+                "Literal": {
+                  "Value": "9D"
+                }
               }
             }
           }

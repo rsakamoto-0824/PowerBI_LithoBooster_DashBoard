@@ -59,7 +59,7 @@
               {
                 "textRuns": [
                   {
-                    "value": "※ WAFER_ID/SHOTNO/MARKNOはMark単位の行を得るためのキー（値はメジャーで重複平均済み）",
+                    "value": "※ 左=X成分、右=Y成分。各パネル内でOPERATIONが隣接し差を比較できる。WAFER_ID/SHOTNO/MARKNOはMark単位の行を得るためのキー",
                     "textStyle": {
                       "fontSize": "9pt"
                     }
