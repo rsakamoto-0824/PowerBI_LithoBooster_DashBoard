@@ -1,0 +1,99 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-29 計測値X/Y分布（全体 / Scan方向1 / Scan方向2）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "SHOTINFO_DIRECTION",
+      "WAFER_ID",
+      "SHOTINFO_SHOTNO",
+      "MARKINFO_MARKNO",
+      "計測値X 平均",
+      "計測値Y 平均"
+    ],
+    "note": "各行を『全体』と『Scan方向N』の2区分へ複製して3カテゴリを作る"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "transform": [
+    {
+      "calculate": "['全体', 'Scan方向' + datum['SHOTINFO_DIRECTION']]",
+      "as": "区分"
+    },
+    {
+      "flatten": [
+        "区分"
+      ]
+    },
+    {
+      "fold": [
+        "計測値X 平均",
+        "計測値Y 平均"
+      ],
+      "as": [
+        "component",
+        "value"
+      ]
+    },
+    {
+      "calculate": "datum.component === '計測値X 平均' ? 'X成分' : 'Y成分'",
+      "as": "成分"
+    }
+  ],
+  "mark": {
+    "type": "boxplot",
+    "extent": 1.5,
+    "size": 22
+  },
+  "encoding": {
+    "x": {
+      "field": "区分",
+      "type": "nominal",
+      "title": null,
+      "axis": {
+        "labelAngle": 0
+      },
+      "sort": [
+        "全体",
+        "Scan方向1",
+        "Scan方向2"
+      ]
+    },
+    "column": {
+      "field": "成分",
+      "type": "nominal",
+      "header": {
+        "title": null
+      }
+    },
+    "y": {
+      "field": "value",
+      "type": "quantitative",
+      "title": "計測値 (nm)"
+    },
+    "color": {
+      "field": "成分",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "X成分",
+          "Y成分"
+        ],
+        "range": [
+          "#1E2761",
+          "#F96167"
+        ]
+      },
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-02 補正量X/Yの箱ひげ図（OPERATION別）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "OPERATION",
+      "WAFER_ID",
+      "CORRDATA_ID",
+      "補正量X 平均",
+      "補正量Y 平均"
+    ],
+    "note": "WAFER_ID/CORRDATA_IDは補正点単位の行を得るためのキー"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "transform": [
+    {
+      "fold": [
+        "補正量X 平均",
+        "補正量Y 平均"
+      ],
+      "as": [
+        "component",
+        "value"
+      ]
+    },
+    {
+      "calculate": "datum.component === '補正量X 平均' ? 'X成分' : 'Y成分'",
+      "as": "成分"
+    }
+  ],
+  "mark": {
+    "type": "boxplot",
+    "extent": 1.5,
+    "size": 22
+  },
+  "encoding": {
+    "x": {
+      "field": "OPERATION",
+      "type": "nominal",
+      "title": null,
+      "axis": {
+        "labelAngle": 0
+      }
+    },
+    "column": {
+      "field": "成分",
+      "type": "nominal",
+      "header": {
+        "title": null
+      }
+    },
+    "y": {
+      "field": "value",
+      "type": "quantitative",
+      "title": "補正量 (nm)"
+    },
+    "color": {
+      "field": "成分",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "X成分",
+          "Y成分"
+        ],
+        "range": [
+          "#1E2761",
+          "#F96167"
+        ]
+      },
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

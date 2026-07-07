@@ -182,20 +182,43 @@ P1/P4はモックアップ準拠でカード含め9〜10個になっている。
 - DenebはAppSourceの**認定版**を使用する
 - 定義は `deneb/*.json` を正とし、修正時はDenebエディタへ貼り付けて反映する
 
-### 4.2 雛形として用意した定義
+### 4.2 グラフごとの定義（1ビジュアル = 1ファイル）
 
-| ファイル | 対象 | 状態 |
+ファイル名は「ページ_可視化ID_内容」。**フィールド名はモデルの実際の
+列名・メジャー名に一致**させており、レポートの実装枠に記載のフィールドを
+名前どおりDenebの「値」へ追加すれば動く構成にしている。
+各ファイルの `usermeta.datasetFields` が必要フィールドの正である。
+
+| ファイル | 対象 | 備考 |
 |---|---|---|
-| [v11_vector_map.json](deneb/v11_vector_map.json) | V-11計測値ベクトル（V-12はfacet追加で流用） | 雛形。フィールド名の対応をDeneb側で設定 |
-| [v22_covariance_ellipse.json](deneb/v22_covariance_ellipse.json) | V-22/V-23共分散楕円 | 雛形。Vx/Vy/CxyはDAXメジャーで供給 |
-| [v26_shot_array.json](deneb/v26_shot_array.json) | V-26/V-18補正前Shot配列 | 雛形。逆算式の符号はI-009確認後に確定 |
-| [v29_boxplot.json](deneb/v29_boxplot.json) | V-01/V-02/V-21/V-29箱ひげ図 | 雛形。categoryと値X/Yを割り当てて流用 |
+| [p1_v01_box_measxy_by_operation.json](deneb/p1_v01_box_measxy_by_operation.json) | V-01 計測値箱ひげ | X/Y成分を2面並置 |
+| [p2_v12_mean_vector_field.json](deneb/p2_v12_mean_vector_field.json) | V-12 平均ベクトル場俯瞰 | 装置×OPERATIONのfacet。枠サイズはOPERATIONから自動判定 |
+| [p3_v11_vector_map.json](deneb/p3_v11_vector_map.json) | V-11 計測値ベクトル | 矢印倍率・Shot枠サイズのスライダー付き |
+| [p3_v25_heatmap_xy.json](deneb/p3_v25_heatmap_xy.json) | V-25 X/Yヒートマップ | 2面並置、発散配色（0中心） |
+| [p3_v27_heatmap_veclen.json](deneb/p3_v27_heatmap_veclen.json) | V-27 ベクトル長ヒートマップ | viridis配色 |
+| [p3_v22_covariance_ellipse.json](deneb/p3_v22_covariance_ellipse.json) | V-22 面内共分散楕円 | 分散・共分散はE[X²]−E[X]²等でDeneb側計算。Wafer数3未満非表示 |
+| [p3_v26_shot_array_canon.json](deneb/p3_v26_shot_array_canon.json) | V-26 補正前Shot配列（Canon） | SEPA+SAME合成。符号はI-009 |
+| [p4_v02_box_corrxy_by_operation.json](deneb/p4_v02_box_corrxy_by_operation.json) | V-02 補正量箱ひげ | X/Y成分を2面並置 |
+| [p5_v18_shot_array_grid.json](deneb/p5_v18_shot_array_grid.json) | V-18 補正前Shot配列俯瞰（Nikon） | 装置×OPERATIONのfacet。符号はI-009 |
+| [p6_v14_corr_vector_map.json](deneb/p6_v14_corr_vector_map.json) | V-14 補正点ベクトル | OFSET/SCAL/ROTをドロップダウン切替 |
+| [p6_v18_shot_array_wafer.json](deneb/p6_v18_shot_array_wafer.json) | V-18 補正前Shot配列（Wafer単位） | 符号はI-009 |
+| [p7_v19_stack_vector.json](deneb/p7_v19_stack_vector.json) | V-19 スタック平均ベクトル | 全体/方向1/方向2の3面。全体は点数重み付き合成 |
+| [p7_v23_stack_ellipse.json](deneb/p7_v23_stack_ellipse.json) | V-23 スタック共分散楕円 | 同上の3面構成 |
+| [p7_v21_box_by_mark.json](deneb/p7_v21_box_by_mark.json) | V-21 Mark位置別箱ひげ | x軸=Mark番号 |
+| [p7_v29_box_by_direction.json](deneb/p7_v29_box_by_direction.json) | V-29 方向別箱ひげ | 全体/方向1/方向2（行を複製して3区分化） |
 
 実装時の注意:
 
+- **座標の単位**: `SHOTINFO_PosX/Y` は nm（spec内で1/1,000,000してmm化）、
+  `MARKINFO_POSX/Y` と `CORRDATA_POSX/Y` は mm（変換なし）。
+  この換算はspec側で実装済みのため、フィールドを名前どおり渡せばよい
+- 計測値・補正量は**メジャー（平均）で渡す**。重複データはPower BI側の
+  グループ化で自動的に平均される（要件4.4の重複平均ルールと整合）
 - Denebへ渡す行数を絞る（必須フィルター + Wafer選択）。
   DirectQueryではビジュアルごとの行数上限（既定30,000行）にも注意する
-- 楕円のnm→mm換算係数と誇張倍率は実データで調整する
+- 矢印・楕円・誇張の倍率はスライダーで調整可能。実データで既定値を見直す
+- 全15ファイルはVega-Lite v5公式スキーマで検証済み。
+  フィールド名はモデル定義との一致を機械照合済み
 
 ## 5. 検証手順（Windows / Power BI Desktop）
 
@@ -219,4 +242,4 @@ P1/P4はモックアップ準拠でカード含め9〜10個になっている。
 
 - I-001b（接続情報）: 確定後に 2.3 の手順で切替
 - I-002（単位・判定の意味）: メジャーの単位ラベル・判定0率の名称に反映
-- I-009（逆算の符号規約）: v26_shot_array.json の変位式に反映
+- I-009（逆算の符号規約）: p3_v26 / p5_v18 / p6_v18 の各Shot配列specの変位式に反映

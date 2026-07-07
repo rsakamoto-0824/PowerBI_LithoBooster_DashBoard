@@ -1,0 +1,803 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-23 Shotスタック共分散楕円。Mark位置ごとのばらつき（全体/Scan方向1/Scan方向2）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "MARKINFO_POSX",
+      "MARKINFO_POSY",
+      "SHOTINFO_DIRECTION",
+      "計測値X 平均",
+      "計測値Y 平均",
+      "計測値X2乗 平均",
+      "計測値Y2乗 平均",
+      "計測値XY 平均",
+      "測定点数"
+    ],
+    "note": "全体パネルは点数による重み付きでE[X]等を合成してから分散・共分散を計算。2σ楕円、色=|相関係数|"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "params": [
+    {
+      "name": "stackEllipseScale",
+      "value": 0.02,
+      "bind": {
+        "input": "range",
+        "min": 0.002,
+        "max": 0.2,
+        "step": 0.002,
+        "name": "楕円倍率(mm/nm): "
+      }
+    }
+  ],
+  "hconcat": [
+    {
+      "title": "全体（方向区別なし）",
+      "transform": [
+        {
+          "calculate": "datum['測定点数'] * datum['計測値X 平均']",
+          "as": "wx"
+        },
+        {
+          "calculate": "datum['測定点数'] * datum['計測値Y 平均']",
+          "as": "wy"
+        },
+        {
+          "calculate": "datum['測定点数'] * datum['計測値X2乗 平均']",
+          "as": "wxx"
+        },
+        {
+          "calculate": "datum['測定点数'] * datum['計測値Y2乗 平均']",
+          "as": "wyy"
+        },
+        {
+          "calculate": "datum['測定点数'] * datum['計測値XY 平均']",
+          "as": "wxy"
+        },
+        {
+          "aggregate": [
+            {
+              "op": "sum",
+              "field": "wx",
+              "as": "sumWx"
+            },
+            {
+              "op": "sum",
+              "field": "wy",
+              "as": "sumWy"
+            },
+            {
+              "op": "sum",
+              "field": "wxx",
+              "as": "sumWxx"
+            },
+            {
+              "op": "sum",
+              "field": "wyy",
+              "as": "sumWyy"
+            },
+            {
+              "op": "sum",
+              "field": "wxy",
+              "as": "sumWxy"
+            },
+            {
+              "op": "sum",
+              "field": "測定点数",
+              "as": "sumN"
+            },
+            {
+              "op": "mean",
+              "field": "MARKINFO_POSX",
+              "as": "MARKINFO_POSX"
+            },
+            {
+              "op": "mean",
+              "field": "MARKINFO_POSY",
+              "as": "MARKINFO_POSY"
+            }
+          ],
+          "groupby": [
+            "MARKINFO_POSX",
+            "MARKINFO_POSY"
+          ]
+        },
+        {
+          "calculate": "datum.sumWx / max(datum.sumN, 1)",
+          "as": "eX"
+        },
+        {
+          "calculate": "datum.sumWy / max(datum.sumN, 1)",
+          "as": "eY"
+        },
+        {
+          "calculate": "datum.sumWxx / max(datum.sumN, 1)",
+          "as": "eXX"
+        },
+        {
+          "calculate": "datum.sumWyy / max(datum.sumN, 1)",
+          "as": "eYY"
+        },
+        {
+          "calculate": "datum.sumWxy / max(datum.sumN, 1)",
+          "as": "eXY"
+        },
+        {
+          "calculate": "datum['MARKINFO_POSX']",
+          "as": "centerX"
+        },
+        {
+          "calculate": "datum['MARKINFO_POSY']",
+          "as": "centerY"
+        },
+        {
+          "calculate": "max(datum.eXX - datum.eX * datum.eX, 0)",
+          "as": "varX"
+        },
+        {
+          "calculate": "max(datum.eYY - datum.eY * datum.eY, 0)",
+          "as": "varY"
+        },
+        {
+          "calculate": "datum.eXY - datum.eX * datum.eY",
+          "as": "covXY"
+        },
+        {
+          "calculate": "(datum.varX + datum.varY) / 2",
+          "as": "meanVar"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar * datum.meanVar - (datum.varX * datum.varY - datum.covXY * datum.covXY), 0))",
+          "as": "disc"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar + datum.disc, 0)) * 2",
+          "as": "semiA"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar - datum.disc, 0)) * 2",
+          "as": "semiB"
+        },
+        {
+          "calculate": "0.5 * atan2(2 * datum.covXY, datum.varX - datum.varY)",
+          "as": "theta"
+        },
+        {
+          "calculate": "abs(datum.covXY) / (sqrt(datum.varX * datum.varY) + 1e-9)",
+          "as": "absCorr"
+        },
+        {
+          "calculate": "sequence(0, 6.6, 0.3)",
+          "as": "t"
+        },
+        {
+          "flatten": [
+            "t"
+          ]
+        },
+        {
+          "calculate": "datum.centerX + (datum.semiA * cos(datum.t) * cos(datum.theta) - datum.semiB * sin(datum.t) * sin(datum.theta)) * stackEllipseScale",
+          "as": "ellipseX"
+        },
+        {
+          "calculate": "datum.centerY + (datum.semiA * cos(datum.t) * sin(datum.theta) + datum.semiB * sin(datum.t) * cos(datum.theta)) * stackEllipseScale",
+          "as": "ellipseY"
+        }
+      ],
+      "layer": [
+        {
+          "data": {
+            "values": [
+              {}
+            ]
+          },
+          "transform": [
+            {
+              "calculate": "-12",
+              "as": "fx1"
+            },
+            {
+              "calculate": "12",
+              "as": "fx2"
+            },
+            {
+              "calculate": "-14",
+              "as": "fy1"
+            },
+            {
+              "calculate": "14",
+              "as": "fy2"
+            }
+          ],
+          "mark": {
+            "type": "rect",
+            "fill": null,
+            "stroke": "#C8CCDA",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "fx1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "fx2"
+            },
+            "y": {
+              "field": "fy1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y2": {
+              "field": "fy2"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "line",
+            "interpolate": "linear-closed",
+            "strokeWidth": 1.2
+          },
+          "encoding": {
+            "x": {
+              "field": "ellipseX",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y": {
+              "field": "ellipseY",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "detail": [
+              {
+                "field": "MARKINFO_POSX"
+              },
+              {
+                "field": "MARKINFO_POSY"
+              }
+            ],
+            "order": {
+              "field": "t"
+            },
+            "color": {
+              "field": "absCorr",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "plasma",
+                "domain": [
+                  0,
+                  1
+                ]
+              },
+              "legend": {
+                "title": "|相関係数 r|"
+              }
+            },
+            "tooltip": [
+              {
+                "field": "centerX",
+                "title": "位置X (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "centerY",
+                "title": "位置Y (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "absCorr",
+                "title": "|相関係数|",
+                "format": ".2f"
+              }
+            ]
+          }
+        }
+      ],
+      "width": 200,
+      "height": 200
+    },
+    {
+      "title": "Scan方向1",
+      "transform": [
+        {
+          "filter": "datum['SHOTINFO_DIRECTION'] === 1"
+        },
+        {
+          "calculate": "datum['計測値X 平均']",
+          "as": "eX"
+        },
+        {
+          "calculate": "datum['計測値Y 平均']",
+          "as": "eY"
+        },
+        {
+          "calculate": "datum['計測値X2乗 平均']",
+          "as": "eXX"
+        },
+        {
+          "calculate": "datum['計測値Y2乗 平均']",
+          "as": "eYY"
+        },
+        {
+          "calculate": "datum['計測値XY 平均']",
+          "as": "eXY"
+        },
+        {
+          "calculate": "datum['MARKINFO_POSX']",
+          "as": "centerX"
+        },
+        {
+          "calculate": "datum['MARKINFO_POSY']",
+          "as": "centerY"
+        },
+        {
+          "calculate": "max(datum.eXX - datum.eX * datum.eX, 0)",
+          "as": "varX"
+        },
+        {
+          "calculate": "max(datum.eYY - datum.eY * datum.eY, 0)",
+          "as": "varY"
+        },
+        {
+          "calculate": "datum.eXY - datum.eX * datum.eY",
+          "as": "covXY"
+        },
+        {
+          "calculate": "(datum.varX + datum.varY) / 2",
+          "as": "meanVar"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar * datum.meanVar - (datum.varX * datum.varY - datum.covXY * datum.covXY), 0))",
+          "as": "disc"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar + datum.disc, 0)) * 2",
+          "as": "semiA"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar - datum.disc, 0)) * 2",
+          "as": "semiB"
+        },
+        {
+          "calculate": "0.5 * atan2(2 * datum.covXY, datum.varX - datum.varY)",
+          "as": "theta"
+        },
+        {
+          "calculate": "abs(datum.covXY) / (sqrt(datum.varX * datum.varY) + 1e-9)",
+          "as": "absCorr"
+        },
+        {
+          "calculate": "sequence(0, 6.6, 0.3)",
+          "as": "t"
+        },
+        {
+          "flatten": [
+            "t"
+          ]
+        },
+        {
+          "calculate": "datum.centerX + (datum.semiA * cos(datum.t) * cos(datum.theta) - datum.semiB * sin(datum.t) * sin(datum.theta)) * stackEllipseScale",
+          "as": "ellipseX"
+        },
+        {
+          "calculate": "datum.centerY + (datum.semiA * cos(datum.t) * sin(datum.theta) + datum.semiB * sin(datum.t) * cos(datum.theta)) * stackEllipseScale",
+          "as": "ellipseY"
+        }
+      ],
+      "layer": [
+        {
+          "data": {
+            "values": [
+              {}
+            ]
+          },
+          "transform": [
+            {
+              "calculate": "-12",
+              "as": "fx1"
+            },
+            {
+              "calculate": "12",
+              "as": "fx2"
+            },
+            {
+              "calculate": "-14",
+              "as": "fy1"
+            },
+            {
+              "calculate": "14",
+              "as": "fy2"
+            }
+          ],
+          "mark": {
+            "type": "rect",
+            "fill": null,
+            "stroke": "#C8CCDA",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "fx1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "fx2"
+            },
+            "y": {
+              "field": "fy1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y2": {
+              "field": "fy2"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "line",
+            "interpolate": "linear-closed",
+            "strokeWidth": 1.2
+          },
+          "encoding": {
+            "x": {
+              "field": "ellipseX",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y": {
+              "field": "ellipseY",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "detail": [
+              {
+                "field": "MARKINFO_POSX"
+              },
+              {
+                "field": "MARKINFO_POSY"
+              }
+            ],
+            "order": {
+              "field": "t"
+            },
+            "color": {
+              "field": "absCorr",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "plasma",
+                "domain": [
+                  0,
+                  1
+                ]
+              },
+              "legend": {
+                "title": "|相関係数 r|"
+              }
+            },
+            "tooltip": [
+              {
+                "field": "centerX",
+                "title": "位置X (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "centerY",
+                "title": "位置Y (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "absCorr",
+                "title": "|相関係数|",
+                "format": ".2f"
+              }
+            ]
+          }
+        }
+      ],
+      "width": 200,
+      "height": 200
+    },
+    {
+      "title": "Scan方向2",
+      "transform": [
+        {
+          "filter": "datum['SHOTINFO_DIRECTION'] === 2"
+        },
+        {
+          "calculate": "datum['計測値X 平均']",
+          "as": "eX"
+        },
+        {
+          "calculate": "datum['計測値Y 平均']",
+          "as": "eY"
+        },
+        {
+          "calculate": "datum['計測値X2乗 平均']",
+          "as": "eXX"
+        },
+        {
+          "calculate": "datum['計測値Y2乗 平均']",
+          "as": "eYY"
+        },
+        {
+          "calculate": "datum['計測値XY 平均']",
+          "as": "eXY"
+        },
+        {
+          "calculate": "datum['MARKINFO_POSX']",
+          "as": "centerX"
+        },
+        {
+          "calculate": "datum['MARKINFO_POSY']",
+          "as": "centerY"
+        },
+        {
+          "calculate": "max(datum.eXX - datum.eX * datum.eX, 0)",
+          "as": "varX"
+        },
+        {
+          "calculate": "max(datum.eYY - datum.eY * datum.eY, 0)",
+          "as": "varY"
+        },
+        {
+          "calculate": "datum.eXY - datum.eX * datum.eY",
+          "as": "covXY"
+        },
+        {
+          "calculate": "(datum.varX + datum.varY) / 2",
+          "as": "meanVar"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar * datum.meanVar - (datum.varX * datum.varY - datum.covXY * datum.covXY), 0))",
+          "as": "disc"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar + datum.disc, 0)) * 2",
+          "as": "semiA"
+        },
+        {
+          "calculate": "sqrt(max(datum.meanVar - datum.disc, 0)) * 2",
+          "as": "semiB"
+        },
+        {
+          "calculate": "0.5 * atan2(2 * datum.covXY, datum.varX - datum.varY)",
+          "as": "theta"
+        },
+        {
+          "calculate": "abs(datum.covXY) / (sqrt(datum.varX * datum.varY) + 1e-9)",
+          "as": "absCorr"
+        },
+        {
+          "calculate": "sequence(0, 6.6, 0.3)",
+          "as": "t"
+        },
+        {
+          "flatten": [
+            "t"
+          ]
+        },
+        {
+          "calculate": "datum.centerX + (datum.semiA * cos(datum.t) * cos(datum.theta) - datum.semiB * sin(datum.t) * sin(datum.theta)) * stackEllipseScale",
+          "as": "ellipseX"
+        },
+        {
+          "calculate": "datum.centerY + (datum.semiA * cos(datum.t) * sin(datum.theta) + datum.semiB * sin(datum.t) * cos(datum.theta)) * stackEllipseScale",
+          "as": "ellipseY"
+        }
+      ],
+      "layer": [
+        {
+          "data": {
+            "values": [
+              {}
+            ]
+          },
+          "transform": [
+            {
+              "calculate": "-12",
+              "as": "fx1"
+            },
+            {
+              "calculate": "12",
+              "as": "fx2"
+            },
+            {
+              "calculate": "-14",
+              "as": "fy1"
+            },
+            {
+              "calculate": "14",
+              "as": "fy2"
+            }
+          ],
+          "mark": {
+            "type": "rect",
+            "fill": null,
+            "stroke": "#C8CCDA",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "fx1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "fx2"
+            },
+            "y": {
+              "field": "fy1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y2": {
+              "field": "fy2"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "line",
+            "interpolate": "linear-closed",
+            "strokeWidth": 1.2
+          },
+          "encoding": {
+            "x": {
+              "field": "ellipseX",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y": {
+              "field": "ellipseY",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -16,
+                  16
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "detail": [
+              {
+                "field": "MARKINFO_POSX"
+              },
+              {
+                "field": "MARKINFO_POSY"
+              }
+            ],
+            "order": {
+              "field": "t"
+            },
+            "color": {
+              "field": "absCorr",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "plasma",
+                "domain": [
+                  0,
+                  1
+                ]
+              },
+              "legend": {
+                "title": "|相関係数 r|"
+              }
+            },
+            "tooltip": [
+              {
+                "field": "centerX",
+                "title": "位置X (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "centerY",
+                "title": "位置Y (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "absCorr",
+                "title": "|相関係数|",
+                "format": ".2f"
+              }
+            ]
+          }
+        }
+      ],
+      "width": 200,
+      "height": 200
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

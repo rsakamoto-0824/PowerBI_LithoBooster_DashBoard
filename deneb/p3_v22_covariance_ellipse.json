@@ -1,0 +1,261 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-22 面内共分散楕円マップ。Shot位置ごとのWafer間ばらつき（2σ楕円、色=|相関係数|）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "SHOTINFO_PosX",
+      "SHOTINFO_PosY",
+      "計測値X 平均",
+      "計測値Y 平均",
+      "計測値X2乗 平均",
+      "計測値Y2乗 平均",
+      "計測値XY 平均",
+      "Wafer数"
+    ],
+    "note": "分散=E[X²]−E[X]²、共分散=E[XY]−E[X]E[Y]をDeneb側で計算。Wafer数3未満は非表示。楕円半径はnm→mm誇張倍率で表示"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "params": [
+    {
+      "name": "ellipseScale",
+      "value": 0.05,
+      "bind": {
+        "input": "range",
+        "min": 0.005,
+        "max": 0.3,
+        "step": 0.005,
+        "name": "楕円倍率(mm/nm): "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "filter": "datum['Wafer数'] >= 3"
+    },
+    {
+      "calculate": "datum['計測値X 平均']",
+      "as": "eX"
+    },
+    {
+      "calculate": "datum['計測値Y 平均']",
+      "as": "eY"
+    },
+    {
+      "calculate": "datum['計測値X2乗 平均']",
+      "as": "eXX"
+    },
+    {
+      "calculate": "datum['計測値Y2乗 平均']",
+      "as": "eYY"
+    },
+    {
+      "calculate": "datum['計測値XY 平均']",
+      "as": "eXY"
+    },
+    {
+      "calculate": "datum['SHOTINFO_PosX'] / 1000000",
+      "as": "centerX"
+    },
+    {
+      "calculate": "datum['SHOTINFO_PosY'] / 1000000",
+      "as": "centerY"
+    },
+    {
+      "calculate": "max(datum.eXX - datum.eX * datum.eX, 0)",
+      "as": "varX"
+    },
+    {
+      "calculate": "max(datum.eYY - datum.eY * datum.eY, 0)",
+      "as": "varY"
+    },
+    {
+      "calculate": "datum.eXY - datum.eX * datum.eY",
+      "as": "covXY"
+    },
+    {
+      "calculate": "(datum.varX + datum.varY) / 2",
+      "as": "meanVar"
+    },
+    {
+      "calculate": "sqrt(max(datum.meanVar * datum.meanVar - (datum.varX * datum.varY - datum.covXY * datum.covXY), 0))",
+      "as": "disc"
+    },
+    {
+      "calculate": "sqrt(max(datum.meanVar + datum.disc, 0)) * 2",
+      "as": "semiA"
+    },
+    {
+      "calculate": "sqrt(max(datum.meanVar - datum.disc, 0)) * 2",
+      "as": "semiB"
+    },
+    {
+      "calculate": "0.5 * atan2(2 * datum.covXY, datum.varX - datum.varY)",
+      "as": "theta"
+    },
+    {
+      "calculate": "abs(datum.covXY) / (sqrt(datum.varX * datum.varY) + 1e-9)",
+      "as": "absCorr"
+    },
+    {
+      "calculate": "sequence(0, 6.6, 0.3)",
+      "as": "t"
+    },
+    {
+      "flatten": [
+        "t"
+      ]
+    },
+    {
+      "calculate": "datum.centerX + (datum.semiA * cos(datum.t) * cos(datum.theta) - datum.semiB * sin(datum.t) * sin(datum.theta)) * ellipseScale",
+      "as": "ellipseX"
+    },
+    {
+      "calculate": "datum.centerY + (datum.semiA * cos(datum.t) * sin(datum.theta) + datum.semiB * sin(datum.t) * cos(datum.theta)) * ellipseScale",
+      "as": "ellipseY"
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "sequence": {
+          "start": 0,
+          "stop": 6.32,
+          "step": 0.05,
+          "as": "t"
+        }
+      },
+      "transform": [
+        {
+          "calculate": "150 * cos(datum.t)",
+          "as": "circleX"
+        },
+        {
+          "calculate": "150 * sin(datum.t)",
+          "as": "circleY"
+        }
+      ],
+      "mark": {
+        "type": "line",
+        "stroke": "#9AA0B4",
+        "strokeWidth": 1
+      },
+      "encoding": {
+        "x": {
+          "field": "circleX",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "circleY",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "order": {
+          "field": "t"
+        }
+      }
+    },
+    {
+      "mark": {
+        "type": "line",
+        "interpolate": "linear-closed",
+        "strokeWidth": 1.2
+      },
+      "encoding": {
+        "x": {
+          "field": "ellipseX",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "y": {
+          "field": "ellipseY",
+          "type": "quantitative",
+          "scale": {
+            "domain": [
+              -165,
+              165
+            ]
+          },
+          "axis": null,
+          "title": null
+        },
+        "detail": [
+          {
+            "field": "SHOTINFO_PosX"
+          },
+          {
+            "field": "SHOTINFO_PosY"
+          }
+        ],
+        "order": {
+          "field": "t"
+        },
+        "color": {
+          "field": "absCorr",
+          "type": "quantitative",
+          "scale": {
+            "scheme": "plasma",
+            "domain": [
+              0,
+              1
+            ]
+          },
+          "legend": {
+            "title": "|相関係数 r|"
+          }
+        },
+        "tooltip": [
+          {
+            "field": "centerX",
+            "title": "位置X (mm)",
+            "format": ".1f"
+          },
+          {
+            "field": "centerY",
+            "title": "位置Y (mm)",
+            "format": ".1f"
+          },
+          {
+            "field": "absCorr",
+            "title": "|相関係数|",
+            "format": ".2f"
+          }
+        ]
+      }
+    }
+  ],
+  "width": "container",
+  "height": "container",
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

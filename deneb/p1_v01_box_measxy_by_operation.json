@@ -1,0 +1,85 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-01 計測値X/Yの箱ひげ図（OPERATION別）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "OPERATION",
+      "WAFER_ID",
+      "SHOTINFO_SHOTNO",
+      "MARKINFO_MARKNO",
+      "計測値X 平均",
+      "計測値Y 平均"
+    ],
+    "note": "WAFER_ID/SHOTNO/MARKNOはMark単位の行を得るためのキー（値はメジャーで重複平均済み）"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "transform": [
+    {
+      "fold": [
+        "計測値X 平均",
+        "計測値Y 平均"
+      ],
+      "as": [
+        "component",
+        "value"
+      ]
+    },
+    {
+      "calculate": "datum.component === '計測値X 平均' ? 'X成分' : 'Y成分'",
+      "as": "成分"
+    }
+  ],
+  "mark": {
+    "type": "boxplot",
+    "extent": 1.5,
+    "size": 22
+  },
+  "encoding": {
+    "x": {
+      "field": "OPERATION",
+      "type": "nominal",
+      "title": null,
+      "axis": {
+        "labelAngle": 0
+      }
+    },
+    "column": {
+      "field": "成分",
+      "type": "nominal",
+      "header": {
+        "title": null
+      }
+    },
+    "y": {
+      "field": "value",
+      "type": "quantitative",
+      "title": "計測値 (nm)"
+    },
+    "color": {
+      "field": "成分",
+      "type": "nominal",
+      "scale": {
+        "domain": [
+          "X成分",
+          "Y成分"
+        ],
+        "range": [
+          "#1E2761",
+          "#F96167"
+        ]
+      },
+      "legend": null
+    }
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

@@ -69,6 +69,16 @@ table CANON
 				DIVIDE ( ZeroPoints, AllPoints )
 		formatString: 0.0%
 
+	/// 共分散楕円用（V-22/V-23）。分散・共分散はDeneb側で E[X²]−E[X]² / E[XY]−E[X]E[Y] から計算する
+	measure '計測値X2乗 平均' = AVERAGEX ( 'CANON', 'CANON'[RAW_DATA_X] * 'CANON'[RAW_DATA_X] )
+		formatString: 0.00
+
+	measure '計測値Y2乗 平均' = AVERAGEX ( 'CANON', 'CANON'[RAW_DATA_Y] * 'CANON'[RAW_DATA_Y] )
+		formatString: 0.00
+
+	measure '計測値XY 平均' = AVERAGEX ( 'CANON', 'CANON'[RAW_DATA_X] * 'CANON'[RAW_DATA_Y] )
+		formatString: 0.00
+
 	/// Wafer低次補正成分トレンド用（V-06）。単位は想定: シフトnm
 	measure 'AGA SX 平均' = AVERAGE ( 'CANON'[AGA_LINEAR_SX] )
 		formatString: 0.00

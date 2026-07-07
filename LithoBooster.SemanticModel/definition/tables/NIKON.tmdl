@@ -90,6 +90,19 @@ table NIKON
 			RETURN
 				FORMAT ( AvgV, "0.00" ) & " ± " & FORMAT ( Sigma3, "0.00" ) & " µrad"
 
+	/// 補正点データの成分別平均（V-14/V-18用。OFSETは補正量X/Y 平均を使う）
+	measure 'CORR SCALX 平均' = AVERAGE ( 'NIKON'[CORRDATA_SCALX] )
+		formatString: 0.00
+
+	measure 'CORR SCALY 平均' = AVERAGE ( 'NIKON'[CORRDATA_SCALY] )
+		formatString: 0.00
+
+	measure 'CORR ROTX 平均' = AVERAGE ( 'NIKON'[CORRDATA_ROTX] )
+		formatString: 0.00
+
+	measure 'CORR ROTY 平均' = AVERAGE ( 'NIKON'[CORRDATA_ROTY] )
+		formatString: 0.00
+
 	/// V-28 Shot補正成分の棒グラフ用（線形）
 	measure 'SHOT OFSETX 平均' = AVERAGE ( 'NIKON'[SHOT_OFSETX] )
 		formatString: 0.00

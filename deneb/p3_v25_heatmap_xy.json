@@ -1,0 +1,353 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-25 計測値X/Yヒートマップ（Shot単位平均をX成分・Y成分で並置）",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "SHOTINFO_PosX",
+      "SHOTINFO_PosY",
+      "計測値X 平均",
+      "計測値Y 平均"
+    ],
+    "note": "Shot枠サイズは24×28mm前提（MSR-MLFのWaferを見る場合はtransform内の24/28を22/26に変更）"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "hconcat": [
+    {
+      "title": "計測値X 平均",
+      "transform": [
+        {
+          "calculate": "datum['SHOTINFO_PosX'] / 1000000",
+          "as": "shotXmm"
+        },
+        {
+          "calculate": "datum['SHOTINFO_PosY'] / 1000000",
+          "as": "shotYmm"
+        },
+        {
+          "calculate": "24",
+          "as": "pitchXmm"
+        },
+        {
+          "calculate": "28",
+          "as": "pitchYmm"
+        },
+        {
+          "calculate": "datum.shotXmm - datum.pitchXmm / 2",
+          "as": "frameX1"
+        },
+        {
+          "calculate": "datum.shotXmm + datum.pitchXmm / 2",
+          "as": "frameX2"
+        },
+        {
+          "calculate": "datum.shotYmm - datum.pitchYmm / 2",
+          "as": "frameY1"
+        },
+        {
+          "calculate": "datum.shotYmm + datum.pitchYmm / 2",
+          "as": "frameY2"
+        }
+      ],
+      "layer": [
+        {
+          "data": {
+            "sequence": {
+              "start": 0,
+              "stop": 6.32,
+              "step": 0.05,
+              "as": "t"
+            }
+          },
+          "transform": [
+            {
+              "calculate": "150 * cos(datum.t)",
+              "as": "circleX"
+            },
+            {
+              "calculate": "150 * sin(datum.t)",
+              "as": "circleY"
+            }
+          ],
+          "mark": {
+            "type": "line",
+            "stroke": "#9AA0B4",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "circleX",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -165,
+                  165
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y": {
+              "field": "circleY",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -165,
+                  165
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "order": {
+              "field": "t"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "rect",
+            "stroke": "#FFFFFF",
+            "strokeWidth": 0.4
+          },
+          "encoding": {
+            "x": {
+              "field": "frameX1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -165,
+                  165
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "frameX2"
+            },
+            "y": {
+              "field": "frameY1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -165,
+                  165
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y2": {
+              "field": "frameY2"
+            },
+            "color": {
+              "field": "計測値X 平均",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "redblue",
+                "domainMid": 0,
+                "reverse": true
+              },
+              "legend": {
+                "title": "nm"
+              }
+            },
+            "tooltip": [
+              {
+                "field": "shotXmm",
+                "title": "Shot X (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "shotYmm",
+                "title": "Shot Y (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "計測値X 平均",
+                "title": "計測値X 平均",
+                "format": ".1f"
+              }
+            ]
+          }
+        }
+      ],
+      "width": 220,
+      "height": 220
+    },
+    {
+      "title": "計測値Y 平均",
+      "transform": [
+        {
+          "calculate": "datum['SHOTINFO_PosX'] / 1000000",
+          "as": "shotXmm"
+        },
+        {
+          "calculate": "datum['SHOTINFO_PosY'] / 1000000",
+          "as": "shotYmm"
+        },
+        {
+          "calculate": "24",
+          "as": "pitchXmm"
+        },
+        {
+          "calculate": "28",
+          "as": "pitchYmm"
+        },
+        {
+          "calculate": "datum.shotXmm - datum.pitchXmm / 2",
+          "as": "frameX1"
+        },
+        {
+          "calculate": "datum.shotXmm + datum.pitchXmm / 2",
+          "as": "frameX2"
+        },
+        {
+          "calculate": "datum.shotYmm - datum.pitchYmm / 2",
+          "as": "frameY1"
+        },
+        {
+          "calculate": "datum.shotYmm + datum.pitchYmm / 2",
+          "as": "frameY2"
+        }
+      ],
+      "layer": [
+        {
+          "data": {
+            "sequence": {
+              "start": 0,
+              "stop": 6.32,
+              "step": 0.05,
+              "as": "t"
+            }
+          },
+          "transform": [
+            {
+              "calculate": "150 * cos(datum.t)",
+              "as": "circleX"
+            },
+            {
+              "calculate": "150 * sin(datum.t)",
+              "as": "circleY"
+            }
+          ],
+          "mark": {
+            "type": "line",
+            "stroke": "#9AA0B4",
+            "strokeWidth": 1
+          },
+          "encoding": {
+            "x": {
+              "field": "circleX",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -165,
+                  165
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y": {
+              "field": "circleY",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -165,
+                  165
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "order": {
+              "field": "t"
+            }
+          }
+        },
+        {
+          "mark": {
+            "type": "rect",
+            "stroke": "#FFFFFF",
+            "strokeWidth": 0.4
+          },
+          "encoding": {
+            "x": {
+              "field": "frameX1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -165,
+                  165
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "x2": {
+              "field": "frameX2"
+            },
+            "y": {
+              "field": "frameY1",
+              "type": "quantitative",
+              "scale": {
+                "domain": [
+                  -165,
+                  165
+                ]
+              },
+              "axis": null,
+              "title": null
+            },
+            "y2": {
+              "field": "frameY2"
+            },
+            "color": {
+              "field": "計測値Y 平均",
+              "type": "quantitative",
+              "scale": {
+                "scheme": "redblue",
+                "domainMid": 0,
+                "reverse": true
+              },
+              "legend": {
+                "title": "nm"
+              }
+            },
+            "tooltip": [
+              {
+                "field": "shotXmm",
+                "title": "Shot X (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "shotYmm",
+                "title": "Shot Y (mm)",
+                "format": ".1f"
+              },
+              {
+                "field": "計測値Y 平均",
+                "title": "計測値Y 平均",
+                "format": ".1f"
+              }
+            ]
+          }
+        }
+      ],
+      "width": 220,
+      "height": 220
+    }
+  ],
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}

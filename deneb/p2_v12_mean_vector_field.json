@@ -1,0 +1,263 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "description": "V-12 平均ベクトル場 俯瞰。装置×OPERATIONの小マルチ。色=ベクトル長",
+  "usermeta": {
+    "deneb": {
+      "build": "per-visual",
+      "metaVersion": 2
+    },
+    "datasetFields": [
+      "EQPID",
+      "OPERATION",
+      "SHOTINFO_PosX",
+      "SHOTINFO_PosY",
+      "MARKINFO_POSX",
+      "MARKINFO_POSY",
+      "計測値X 平均",
+      "計測値Y 平均"
+    ],
+    "note": "Shotピッチ(枠)はOPERATIONから自動判定（RDH-MLF: 24×28 / MSR-MLF: 22×26）"
+  },
+  "data": {
+    "name": "dataset"
+  },
+  "params": [
+    {
+      "name": "arrowScale",
+      "value": 0.1,
+      "bind": {
+        "input": "range",
+        "min": 0.01,
+        "max": 1,
+        "step": 0.01,
+        "name": "矢印倍率(mm/nm): "
+      }
+    }
+  ],
+  "transform": [
+    {
+      "calculate": "datum['SHOTINFO_PosX'] / 1000000",
+      "as": "shotXmm"
+    },
+    {
+      "calculate": "datum['SHOTINFO_PosY'] / 1000000",
+      "as": "shotYmm"
+    },
+    {
+      "calculate": "datum.OPERATION === 'MSR-MLF' ? 22 : 24",
+      "as": "pitchXmm"
+    },
+    {
+      "calculate": "datum.OPERATION === 'MSR-MLF' ? 26 : 28",
+      "as": "pitchYmm"
+    },
+    {
+      "calculate": "datum.shotXmm - datum.pitchXmm / 2",
+      "as": "frameX1"
+    },
+    {
+      "calculate": "datum.shotXmm + datum.pitchXmm / 2",
+      "as": "frameX2"
+    },
+    {
+      "calculate": "datum.shotYmm - datum.pitchYmm / 2",
+      "as": "frameY1"
+    },
+    {
+      "calculate": "datum.shotYmm + datum.pitchYmm / 2",
+      "as": "frameY2"
+    },
+    {
+      "calculate": "datum.shotXmm + datum['MARKINFO_POSX']",
+      "as": "markXmm"
+    },
+    {
+      "calculate": "datum.shotYmm + datum['MARKINFO_POSY']",
+      "as": "markYmm"
+    },
+    {
+      "calculate": "sqrt(datum['計測値X 平均'] * datum['計測値X 平均'] + datum['計測値Y 平均'] * datum['計測値Y 平均'])",
+      "as": "vecLenNm"
+    }
+  ],
+  "facet": {
+    "row": {
+      "field": "EQPID",
+      "type": "nominal",
+      "header": {
+        "title": null
+      }
+    },
+    "column": {
+      "field": "OPERATION",
+      "type": "nominal",
+      "header": {
+        "title": null
+      }
+    }
+  },
+  "spec": {
+    "layer": [
+      {
+        "data": {
+          "sequence": {
+            "start": 0,
+            "stop": 6.32,
+            "step": 0.05,
+            "as": "t"
+          }
+        },
+        "transform": [
+          {
+            "calculate": "150 * cos(datum.t)",
+            "as": "circleX"
+          },
+          {
+            "calculate": "150 * sin(datum.t)",
+            "as": "circleY"
+          }
+        ],
+        "mark": {
+          "type": "line",
+          "stroke": "#9AA0B4",
+          "strokeWidth": 1
+        },
+        "encoding": {
+          "x": {
+            "field": "circleX",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                -165,
+                165
+              ]
+            },
+            "axis": null,
+            "title": null
+          },
+          "y": {
+            "field": "circleY",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                -165,
+                165
+              ]
+            },
+            "axis": null,
+            "title": null
+          },
+          "order": {
+            "field": "t"
+          }
+        }
+      },
+      {
+        "mark": {
+          "type": "rect",
+          "fill": null,
+          "stroke": "#C8CCDA",
+          "strokeWidth": 0.5
+        },
+        "encoding": {
+          "x": {
+            "field": "frameX1",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                -165,
+                165
+              ]
+            },
+            "axis": null,
+            "title": null
+          },
+          "x2": {
+            "field": "frameX2"
+          },
+          "y": {
+            "field": "frameY1",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                -165,
+                165
+              ]
+            },
+            "axis": null,
+            "title": null
+          },
+          "y2": {
+            "field": "frameY2"
+          }
+        }
+      },
+      {
+        "transform": [
+          {
+            "calculate": "datum.markXmm + datum['計測値X 平均'] * arrowScale",
+            "as": "tipXmm"
+          },
+          {
+            "calculate": "datum.markYmm + datum['計測値Y 平均'] * arrowScale",
+            "as": "tipYmm"
+          }
+        ],
+        "mark": {
+          "type": "rule",
+          "strokeWidth": 1,
+          "strokeCap": "round"
+        },
+        "encoding": {
+          "x": {
+            "field": "markXmm",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                -165,
+                165
+              ]
+            },
+            "axis": null,
+            "title": null
+          },
+          "y": {
+            "field": "markYmm",
+            "type": "quantitative",
+            "scale": {
+              "domain": [
+                -165,
+                165
+              ]
+            },
+            "axis": null,
+            "title": null
+          },
+          "x2": {
+            "field": "tipXmm"
+          },
+          "y2": {
+            "field": "tipYmm"
+          },
+          "color": {
+            "field": "vecLenNm",
+            "type": "quantitative",
+            "scale": {
+              "scheme": "viridis"
+            },
+            "legend": {
+              "title": "ベクトル長 (nm)"
+            }
+          }
+        }
+      }
+    ],
+    "width": 220,
+    "height": 220
+  },
+  "config": {
+    "view": {
+      "stroke": null
+    }
+  }
+}
